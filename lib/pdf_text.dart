@@ -4,23 +4,10 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 
 
+const MethodChannel channel = const MethodChannel('pdf_text');
 
 /// Class representing a PDF document.
 class PDFDoc {
-
-  static const MethodChannel _channel =
-  const MethodChannel('pdf_text');
-
-  static Future<String> get platformVersion async {
-    final String version = await _channel.invokeMethod('getPlatformVersion');
-    return version;
-  }
-
-  static Future<String> get text async {
-    final String text = await _channel.invokeMethod('getText');
-    return text;
-  }
-
 
   File _file;
   List<_PDFPage> _pages;
@@ -31,13 +18,13 @@ class PDFDoc {
     doc._file = file;
     int length;
     try {
-      length = await _channel.invokeMethod('getDocLength', file.path);
+      length = await channel.invokeMethod('getDocLength', {"path": file.path});
     } on Exception catch (e) {
       return Future.error(e);
     }
     doc._pages = List();
     for (int i = 0; i < length; i++) {
-      doc._pages.add(_PDFPage());
+      doc._pages.add(_PDFPage(doc, i));
     }
     return doc;
   }
@@ -48,11 +35,15 @@ class PDFDoc {
   }
 
 
+  /// Gets the pages of this document.
+  /// The pages indexes start at 0, but the first page has number 1.
+  /// Therefore, if you need to access the 5th page, you will do:
+  /// var page = doc.pages[4]
+  /// print(page.number) -> 5
   List<_PDFPage> get pages => _pages;
 
+  /// Gets the number of pages of this document.
   int get length => _pages.length;
-
-
 
 
 }
@@ -60,8 +51,33 @@ class PDFDoc {
 
 /// Class representing a PDF document page.
 class _PDFPage {
+
+  PDFDoc _parentDoc;
+  int _number;
   String _text;
 
-  String get text => _text;
+  _PDFPage(PDFDoc parentDoc, int number) {
+    _parentDoc = parentDoc;
+    _number = number;
+  }
+
+  /// Gets the text of this page.
+  /// The text retrieval is lazy. So the text of a page is only loaded when
+  /// it is requested for the first time.
+  Future<String> get text async {
+    // Loading the text
+    if (_text == null) {
+      try {
+        _text = await channel.invokeMethod('getDocPageText', {"path": _parentDoc._file.path,
+            "number": _number});
+      } on Exception catch (e) {
+        return Future.error(e);
+      }
+    }
+    return _text;
+  }
+
+  /// Gets the page number.
+  int get number => _number + 1;
 }
 

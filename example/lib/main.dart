@@ -1,10 +1,10 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
-import 'package:flutter/services.dart';
 import 'package:pdf_text/pdf_text.dart';
 
 void main() => runApp(MyApp());
@@ -15,36 +15,18 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
+
   PDFDoc _pdfDoc;
   String _text = "";
+
+  bool _buttonsEnabled = true;
 
   @override
   void initState() {
     super.initState();
-    initPlatformState();
   }
 
 
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
-    String platformVersion;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      platformVersion = await PDFDoc.platformVersion;
-    } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
-    }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-
-    setState(() {
-      _platformVersion = platformVersion;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,14 +48,14 @@ class _MyAppState extends State<MyApp> {
               child: Text("Read random page",
                 style: TextStyle(color: Colors.white),),
               color: Colors.blueAccent,
-              onPressed: _readRandomPage,
+              onPressed: _buttonsEnabled ? _readRandomPage : () {},
               padding: EdgeInsets.all(5),
             ),
             FlatButton(
               child: Text("Read whole document",
                 style: TextStyle(color: Colors.white),),
               color: Colors.blueAccent,
-              onPressed: _readWholeDoc,
+              onPressed: _buttonsEnabled ? _readWholeDoc : () {},
               padding: EdgeInsets.all(5),
             ),
 
@@ -112,9 +94,16 @@ class _MyAppState extends State<MyApp> {
     if (_pdfDoc == null) {
       return;
     }
+    setState(() {
+      _buttonsEnabled = false;
+    });
 
+    String text = await _pdfDoc.pages[Random().nextInt(_pdfDoc.length-1)].text;
 
-    setState(() {});
+    setState(() {
+      _text = text;
+      _buttonsEnabled = true;
+    });
   }
 
   /// Reads the whole document
@@ -122,7 +111,15 @@ class _MyAppState extends State<MyApp> {
     if (_pdfDoc == null) {
       return;
     }
+    setState(() {
+      _buttonsEnabled = false;
+    });
 
-    setState(() {});
+
+
+    setState(() {
+      _buttonsEnabled = true;
+    });
   }
+
 }

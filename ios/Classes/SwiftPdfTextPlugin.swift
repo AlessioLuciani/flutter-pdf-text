@@ -12,12 +12,16 @@ public class SwiftPdfTextPlugin: NSObject, FlutterPlugin {
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
   if call.method == "getDocLength" {
-          let path = call.arguments as! String
-          self.getDocLength(result: result, path: path)
-      }
-    else if call.method == "getPlatformVersion" {
-    result("iOS")
-    } else {
+    let args = call.arguments as! NSDictionary
+          let path = args["path"] as! String
+          getDocLength(result: result, path: path)
+  } else if call.method == "getDocPageText" {
+        let args = call.arguments as! NSDictionary
+        let path = args["path"] as! String
+        let pageNumber = args["number"] as! Int
+        getDocPageText(result: result, path: path, pageNumber: pageNumber)
+  }
+    else {
               result(FlutterMethodNotImplemented)
             }
 
@@ -28,14 +32,36 @@ public class SwiftPdfTextPlugin: NSObject, FlutterPlugin {
               Gets the length of the PDF document in pages.
        */
       private func getDocLength(result: FlutterResult, path: String) {
-          let doc = PDFDocument(url: URL(fileURLWithPath: path))
-          if doc == nil {
-              result(FlutterError(code: "INVALID_PATH",
-                  message: "File path is invalid",
-                  details: nil))
-              return
-          }
+        let doc = getDoc(result: result, path: path)
+        if doc == nil {
+            return
+        }
           let length = doc!.pageCount
           result(length)
       }
+    
+    /**
+            Gets the text  of a document page, given its number..
+     */
+    private func getDocPageText(result: FlutterResult, path: String, pageNumber: Int) {
+      let doc = getDoc(result: result, path: path)
+        if doc == nil {
+            return
+        }
+        let text = doc!.page(at: pageNumber)!.string
+        result(text)
+    }
+    
+    /**
+           Gets a PDF document, given its path.
+    */
+    private func getDoc(result: FlutterResult, path: String) -> PDFDocument? {
+        let doc = PDFDocument(url: URL(fileURLWithPath: path))
+        if doc == nil {
+            result(FlutterError(code: "INVALID_PATH",
+                message: "File path is invalid",
+                details: nil))
+        }
+        return doc
+    }
 }

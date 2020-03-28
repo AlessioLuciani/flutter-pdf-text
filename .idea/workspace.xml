@@ -3,8 +3,11 @@
   <component name="ChangeListManager">
     <list default="true" id="359d9309-f8c4-49fc-99be-35ce59d11e3e" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/Classes/SwiftPdfTextPlugin.swift" beforeDir="false" afterPath="$PROJECT_DIR$/ios/Classes/SwiftPdfTextPlugin.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/pdf_text.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pdf_text.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pdf_text.iml" beforeDir="false" afterPath="$PROJECT_DIR$/pdf_text.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/pdf_text_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/test/pdf_text_test.dart" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
