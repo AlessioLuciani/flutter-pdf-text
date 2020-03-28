@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
@@ -13,6 +16,8 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   String _platformVersion = 'Unknown';
+  PDFDoc _pdfDoc;
+  String _text = "";
 
   @override
   void initState() {
@@ -20,12 +25,13 @@ class _MyAppState extends State<MyApp> {
     initPlatformState();
   }
 
+
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
     String platformVersion;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
-      platformVersion = await PdfText.platformVersion;
+      platformVersion = await PDFDoc.platformVersion;
     } on PlatformException {
       platformVersion = 'Failed to get platform version.';
     }
@@ -45,12 +51,78 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Plugin example app'),
+          title: const Text('PDF Text Example'),
         ),
-        body: Center(
-          child: Text('Running on: $_platformVersion\n'),
+        body: Column(
+          children: <Widget>[
+            FlatButton(
+              child: Text("Pick PDF document",
+                style: TextStyle(color: Colors.white),),
+              color: Colors.blueAccent,
+              onPressed: _pickPDFText,
+              padding: EdgeInsets.all(5),
+            ),
+            FlatButton(
+              child: Text("Read random page",
+                style: TextStyle(color: Colors.white),),
+              color: Colors.blueAccent,
+              onPressed: _readRandomPage,
+              padding: EdgeInsets.all(5),
+            ),
+            FlatButton(
+              child: Text("Read whole document",
+                style: TextStyle(color: Colors.white),),
+              color: Colors.blueAccent,
+              onPressed: _readWholeDoc,
+              padding: EdgeInsets.all(5),
+            ),
+
+            Padding(
+              child: Text(_pdfDoc == null ? "Pick a new PDF document..."
+                  : "PDF document picked, ${_pdfDoc.length} pages\n"),
+              padding: EdgeInsets.all(15),
+            ),
+            Padding(
+              child: Text(_text == "" ? "" : "Text:"),
+              padding: EdgeInsets.all(15),
+            ),
+
+            ListView(
+              shrinkWrap: true,
+              scrollDirection: Axis.vertical,
+              children: <Widget>[
+                Text(_text)
+              ],
+            )
+          ],
         ),
       ),
     );
+  }
+
+  /// Picks a new PDF document from the device
+  Future _pickPDFText() async {
+    File file = await FilePicker.getFile();
+    _pdfDoc = await PDFDoc.fromFile(file);
+    setState(() {});
+  }
+
+  /// Reads a random page of the document
+  Future _readRandomPage() async {
+    if (_pdfDoc == null) {
+      return;
+    }
+
+
+    setState(() {});
+  }
+
+  /// Reads the whole document
+  Future _readWholeDoc() async {
+    if (_pdfDoc == null) {
+      return;
+    }
+
+    setState(() {});
   }
 }

@@ -1,5 +1,5 @@
 name: pdf_text
-description: A plugin package used to extract text from PDF documents.
+description: A Flutter plugin used to extract text from PDF documents.
 version: 0.0.1
 author:
 homepage:
@@ -25,8 +25,11 @@ flutter:
   # be modified. They are used by the tooling to maintain consistency when
   # adding or updating assets for this project.
   plugin:
-    androidPackage: dev.aluc.pdf_text
-    pluginClass: PdfTextPlugin
+    #android:
+      package: dev.aluc.pdf_text
+      pluginClass: PdfTextPlugin
+    #ios:
+     # pluginClass: PdfTextPlugin
 
   # To add assets to your plugin package, add an assets section, like this:
   # assets:
