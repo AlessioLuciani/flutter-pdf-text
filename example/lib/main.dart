@@ -35,49 +35,53 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('PDF Text Example'),
         ),
-        body: Column(
-          children: <Widget>[
-            FlatButton(
-              child: Text("Pick PDF document",
-                style: TextStyle(color: Colors.white),),
-              color: Colors.blueAccent,
-              onPressed: _pickPDFText,
-              padding: EdgeInsets.all(5),
-            ),
-            FlatButton(
-              child: Text("Read random page",
-                style: TextStyle(color: Colors.white),),
-              color: Colors.blueAccent,
-              onPressed: _buttonsEnabled ? _readRandomPage : () {},
-              padding: EdgeInsets.all(5),
-            ),
-            FlatButton(
-              child: Text("Read whole document",
-                style: TextStyle(color: Colors.white),),
-              color: Colors.blueAccent,
-              onPressed: _buttonsEnabled ? _readWholeDoc : () {},
-              padding: EdgeInsets.all(5),
-            ),
+        body: Container(
+          alignment: Alignment.center,
+          padding: EdgeInsets.all(10),
+          child: ListView(
+            children: <Widget>[
+              FlatButton(
+                child: Text("Pick PDF document",
+                  style: TextStyle(color: Colors.white),),
+                color: Colors.blueAccent,
+                onPressed: _pickPDFText,
+                padding: EdgeInsets.all(5),
+              ),
+              FlatButton(
+                child: Text("Read random page",
+                  style: TextStyle(color: Colors.white),),
+                color: Colors.blueAccent,
+                onPressed: _buttonsEnabled ? _readRandomPage : () {},
+                padding: EdgeInsets.all(5),
+              ),
+              FlatButton(
+                child: Text("Read whole document",
+                  style: TextStyle(color: Colors.white),),
+                color: Colors.blueAccent,
+                onPressed: _buttonsEnabled ? _readWholeDoc : () {},
+                padding: EdgeInsets.all(5),
+              ),
 
-            Padding(
-              child: Text(_pdfDoc == null ? "Pick a new PDF document..."
-                  : "PDF document picked, ${_pdfDoc.length} pages\n"),
-              padding: EdgeInsets.all(15),
-            ),
-            Padding(
-              child: Text(_text == "" ? "" : "Text:"),
-              padding: EdgeInsets.all(15),
-            ),
+              Padding(
+                child: Text(_pdfDoc == null ? "Pick a new PDF document..."
+                    : "PDF document picked, ${_pdfDoc.length} pages\n",
+                  style: TextStyle(fontSize: 18),
+                  textAlign: TextAlign.center,),
+                padding: EdgeInsets.all(15),
+              ),
+              Padding(
+                child: Text(_text == "" ? "" : "Text:",
+                  style: TextStyle(fontSize: 18),
+                  textAlign: TextAlign.center,),
+                padding: EdgeInsets.all(15),
+              ),
+              Text(_text),
 
-            ListView(
-              shrinkWrap: true,
-              scrollDirection: Axis.vertical,
-              children: <Widget>[
-                Text(_text)
-              ],
-            )
-          ],
-        ),
+
+            ],
+          ),
+        )
+
       ),
     );
   }
@@ -98,7 +102,7 @@ class _MyAppState extends State<MyApp> {
       _buttonsEnabled = false;
     });
 
-    String text = await _pdfDoc.pages[Random().nextInt(_pdfDoc.length-1)].text;
+    String text = await _pdfDoc.pageAt(Random().nextInt(_pdfDoc.length)+1).text;
 
     setState(() {
       _text = text;

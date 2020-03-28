@@ -9,6 +9,7 @@ const MethodChannel channel = const MethodChannel('pdf_text');
 /// Class representing a PDF document.
 class PDFDoc {
 
+
   File _file;
   List<_PDFPage> _pages;
 
@@ -35,6 +36,10 @@ class PDFDoc {
   }
 
 
+  /// Gets the page of the document at the given page number.
+  _PDFPage pageAt(int pageNumber) => _pages[pageNumber - 1];
+
+
   /// Gets the pages of this document.
   /// The pages indexes start at 0, but the first page has number 1.
   /// Therefore, if you need to access the 5th page, you will do:
@@ -44,6 +49,11 @@ class PDFDoc {
 
   /// Gets the number of pages of this document.
   int get length => _pages.length;
+
+  /// Gets the entire text content of the document.
+  Future<String> get text async {
+
+  }
 
 
 }
