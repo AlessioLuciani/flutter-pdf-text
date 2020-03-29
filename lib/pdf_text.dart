@@ -52,7 +52,29 @@ class PDFDoc {
 
   /// Gets the entire text content of the document.
   Future<String> get text async {
-
+    // Collecting missing pages
+    List<int> missingPagesNumbers = List();
+    for (var page in _pages) {
+      if (page.text == null) {
+        missingPagesNumbers.add(page.number);
+      }
+    }
+    List<String> missingPagesTexts;
+    try {
+      missingPagesTexts = List<String>.from(await channel.invokeMethod('getDocText', {"path": _file.path,
+        "missingPagesNumbers": missingPagesNumbers}));
+    } on Exception catch (e) {
+      return Future.error(e);
+    }
+    // Populating missing pages
+    for (var i = 0; i < missingPagesNumbers.length; i++) {
+      pageAt(missingPagesNumbers[i])._text = missingPagesTexts[i];
+    }
+    String text = "";
+    for (var page in _pages) {
+      text += "${page._text}\n";
+    }
+    return text;
   }
 
 

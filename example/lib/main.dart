@@ -119,9 +119,10 @@ class _MyAppState extends State<MyApp> {
       _buttonsEnabled = false;
     });
 
-
+    String text = await _pdfDoc.text;
 
     setState(() {
+      _text = text;
       _buttonsEnabled = true;
     });
   }

@@ -11,6 +11,7 @@ public class SwiftPdfTextPlugin: NSObject, FlutterPlugin {
   }
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+    
   if call.method == "getDocLength" {
     let args = call.arguments as! NSDictionary
           let path = args["path"] as! String
@@ -20,6 +21,12 @@ public class SwiftPdfTextPlugin: NSObject, FlutterPlugin {
         let path = args["path"] as! String
         let pageNumber = args["number"] as! Int
         getDocPageText(result: result, path: path, pageNumber: pageNumber)
+  }
+     else if call.method == "getDocText" {
+        let args = call.arguments as! NSDictionary
+        let path = args["path"] as! String
+        let missingPagesNumbers = args["missingPagesNumbers"] as! [Int]
+        getDocText(result: result, path: path, missingPagesNumbers: missingPagesNumbers)
   }
     else {
               result(FlutterMethodNotImplemented)
@@ -50,6 +57,22 @@ public class SwiftPdfTextPlugin: NSObject, FlutterPlugin {
         }
         let text = doc!.page(at: pageNumber)!.string
         result(text)
+    }
+    
+    /**
+            Gets the text of the entire document.
+            In order to improve the performance, it only retrieves the pages that are currently missing.
+     */
+    private func getDocText(result: FlutterResult, path: String, missingPagesNumbers: [Int]) {
+      let doc = getDoc(result: result, path: path)
+        if doc == nil {
+            return
+        }
+        var missingPagesTexts = [String]()
+        for pageNumber in missingPagesNumbers {
+            missingPagesTexts.append(doc!.page(at: pageNumber)!.string!)
+        }
+        result(missingPagesTexts)
     }
     
     /**
