@@ -63,8 +63,8 @@ class _MyAppState extends State<MyApp> {
               ),
 
               Padding(
-                child: Text(_pdfDoc == null ? "Pick a new PDF document..."
-                    : "PDF document picked, ${_pdfDoc.length} pages\n",
+                child: Text(_pdfDoc == null ? "Pick a new PDF document and wait for it to load..."
+                    : "PDF document loaded, ${_pdfDoc.length} pages\n",
                   style: TextStyle(fontSize: 18),
                   textAlign: TextAlign.center,),
                 padding: EdgeInsets.all(15),

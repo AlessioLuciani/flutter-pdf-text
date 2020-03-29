@@ -3,7 +3,13 @@
   <component name="ChangeListManager">
     <list default="true" id="359d9309-f8c4-49fc-99be-35ce59d11e3e" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/pdf_text.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pdf_text.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/android/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/kotlin/dev/aluc/pdf_text/PdfTextPlugin.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/kotlin/dev/aluc/pdf_text/PdfTextPlugin.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/android/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/example/android/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/android/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/example/android/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/Classes/SwiftPdfTextPlugin.swift" beforeDir="false" afterPath="$PROJECT_DIR$/ios/Classes/SwiftPdfTextPlugin.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pdf_text.iml" beforeDir="false" afterPath="$PROJECT_DIR$/pdf_text.iml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
