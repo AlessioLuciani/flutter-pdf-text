@@ -8,7 +8,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  pdf_text: ^0.0.1
+  pdf_text: ^0.1.0
 ```
 
 ## Usage
@@ -55,6 +55,34 @@ Read the text of a page of the document:
 String pageText = await page.text;
 ```
 
+## Public Methods
+  
+### PDFDoc
+
+| Return  | Description  |
+
+| PDFPage | **pageAt(int pageNumber)** <br> Gets the page of the document at the given page number. |
+
+| static Future\<PDFDoc> | **fromFile(File file)** <br> Creates a PDFDoc object with a File instance. |
+
+| static Future\<PDFDoc> | **fromPath(String path)** <br> Creates a PDFDoc object with a file path. |
+
+## Objects
+
+```dart
+class PDFDoc {
+  int length; // Number of pages of the document
+  List<PDFPage> pages; // Pages of the document
+  Future<String> text; // Text of the document
+}
+
+class PDFPage {
+  int number; // Number of the page in the document
+  Future<String> text; // Text of the page
+}
+```
+
 ## Contribute
 
-If you have any suggestions, improvements or issues, feel free to contribute to this project. 
+If you have any suggestions, improvements or issues, feel free to contribute to this project.
+You can either submit a new issue or propose a pull request.
