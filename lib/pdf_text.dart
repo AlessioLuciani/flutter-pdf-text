@@ -7,8 +7,8 @@ import 'package:flutter/services.dart';
 const MethodChannel _channel = const MethodChannel('pdf_text');
 
 /// Class representing a PDF document.
-/// In order to create a new PDFDoc instance, one of these two static methods has
-///  to be used: PDFDoc.fromFile, PDFDoc.fromPath.
+/// In order to create a new [PDFDoc] instance, one of these two static methods has
+///  to be used: [PDFDoc.fromFile], [PDFDoc.fromPath].
 class PDFDoc {
 
 
@@ -17,7 +17,7 @@ class PDFDoc {
 
   PDFDoc._internal();
 
-  /// Creates a PDFDoc object with a File instance.
+  /// Creates a [PDFDoc] object with a File instance.
   static Future<PDFDoc> fromFile(File file) async {
     var doc = PDFDoc._internal();
     doc._file = file;
@@ -34,7 +34,7 @@ class PDFDoc {
     return doc;
   }
 
-  /// Creates a PDFDoc object with a file path.
+  /// Creates a [PDFDoc] object with a file path.
   static Future<PDFDoc> fromPath(String path) async {
     return await fromFile(File(path));
   }
@@ -60,7 +60,7 @@ class PDFDoc {
     // Collecting missing pages
     List<int> missingPagesNumbers = List();
     for (var page in _pages) {
-      if (page.text == null) {
+      if (page._text == null) {
         missingPagesNumbers.add(page.number);
       }
     }
@@ -88,7 +88,7 @@ class PDFDoc {
 
 /// Class representing a PDF document page.
 /// It needs not to be directly instantiated, instances will be automatically
-/// created by the PDFDoc class.
+/// created by the [PDFDoc] class.
 class PDFPage {
 
   PDFDoc _parentDoc;

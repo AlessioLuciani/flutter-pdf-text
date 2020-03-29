@@ -70,16 +70,17 @@ public class PdfTextPlugin: FlutterPlugin, MethodCallHandler {
             val pageNumber = args["number"] as Int
             getDocPageText(result, path, pageNumber)
           }
-            "getDocText" -> {
-              val args = call.arguments as Map<String, Any>
-              val path = args["path"] as String
-              val missingPagesNumbers = args["missingPagesNumbers"] as List<Int>
-              getDocText(result, path, missingPagesNumbers)
-            }
+          "getDocText" -> {
+            val args = call.arguments as Map<String, Any>
+            val path = args["path"] as String
+            val missingPagesNumbers = args["missingPagesNumbers"] as List<Int>
+            getDocText(result, path, missingPagesNumbers)
+          }
           else -> {
             Handler(Looper.getMainLooper()).post {
               result.notImplemented()
             }
+
           }
       }
     }
@@ -107,8 +108,9 @@ public class PdfTextPlugin: FlutterPlugin, MethodCallHandler {
     pdfTextStripper.startPage = pageNumber
     pdfTextStripper.endPage = pageNumber
     val text = pdfTextStripper.getText(doc)
-
-
+    Handler(Looper.getMainLooper()).post {
+      result.success(text)
+    }
   }
 
   /**
