@@ -4,28 +4,32 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 
 
-const MethodChannel channel = const MethodChannel('pdf_text');
+const MethodChannel _channel = const MethodChannel('pdf_text');
 
 /// Class representing a PDF document.
+/// In order to create a new PDFDoc instance, one of these two static methods has
+///  to be used: PDFDoc.fromFile, PDFDoc.fromPath.
 class PDFDoc {
 
 
   File _file;
-  List<_PDFPage> _pages;
+  List<PDFPage> _pages;
+
+  PDFDoc._internal();
 
   /// Creates a PDFDoc object with a File instance.
   static Future<PDFDoc> fromFile(File file) async {
-    var doc = PDFDoc();
+    var doc = PDFDoc._internal();
     doc._file = file;
     int length;
     try {
-      length = await channel.invokeMethod('getDocLength', {"path": file.path});
+      length = await _channel.invokeMethod('getDocLength', {"path": file.path});
     } on Exception catch (e) {
       return Future.error(e);
     }
     doc._pages = List();
     for (int i = 0; i < length; i++) {
-      doc._pages.add(_PDFPage(doc, i));
+      doc._pages.add(PDFPage._fromDoc(doc, i));
     }
     return doc;
   }
@@ -36,8 +40,9 @@ class PDFDoc {
   }
 
 
+
   /// Gets the page of the document at the given page number.
-  _PDFPage pageAt(int pageNumber) => _pages[pageNumber - 1];
+  PDFPage pageAt(int pageNumber) => _pages[pageNumber - 1];
 
 
   /// Gets the pages of this document.
@@ -45,7 +50,7 @@ class PDFDoc {
   /// Therefore, if you need to access the 5th page, you will do:
   /// var page = doc.pages[4]
   /// print(page.number) -> 5
-  List<_PDFPage> get pages => _pages;
+  List<PDFPage> get pages => _pages;
 
   /// Gets the number of pages of this document.
   int get length => _pages.length;
@@ -61,7 +66,7 @@ class PDFDoc {
     }
     List<String> missingPagesTexts;
     try {
-      missingPagesTexts = List<String>.from(await channel.invokeMethod('getDocText', {"path": _file.path,
+      missingPagesTexts = List<String>.from(await _channel.invokeMethod('getDocText', {"path": _file.path,
         "missingPagesNumbers": missingPagesNumbers}));
     } on Exception catch (e) {
       return Future.error(e);
@@ -82,13 +87,15 @@ class PDFDoc {
 
 
 /// Class representing a PDF document page.
-class _PDFPage {
+/// It needs not to be directly instantiated, instances will be automatically
+/// created by the PDFDoc class.
+class PDFPage {
 
   PDFDoc _parentDoc;
   int _number;
   String _text;
 
-  _PDFPage(PDFDoc parentDoc, int number) {
+  PDFPage._fromDoc(PDFDoc parentDoc, int number) {
     _parentDoc = parentDoc;
     _number = number;
   }
@@ -100,7 +107,7 @@ class _PDFPage {
     // Loading the text
     if (_text == null) {
       try {
-        _text = await channel.invokeMethod('getDocPageText', {"path": _parentDoc._file.path,
+        _text = await _channel.invokeMethod('getDocPageText', {"path": _parentDoc._file.path,
             "number": _number});
       } on Exception catch (e) {
         return Future.error(e);
