@@ -9,7 +9,7 @@
 This plugin for [Flutter](https://flutter.dev) allows you to read the text content of PDF documents and convert it into strings. It works on iOS and Android. On iOS it uses Apple's [PDFKit](https://developer.apple.com/documentation/pdfkit). On Android it uses Apache's [PdfBox](https://github.com/TomRoush/PdfBox-Android) Android porting.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/AlessioLuciani/flutter-pdf-text/master/example/flutter-pdf-text.gif" alt="Demo Example App" style="margin:auto" width="372" height="686">
+  <img src="https://raw.githubusercontent.com/AlessioLuciani/flutter-pdf-text/master/example/flutter-pdf-text.gif" alt="Demo Example App" style="margin:auto"  width="250"  height="550">
 </p>
 
 ## Getting Started
