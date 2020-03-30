@@ -1,3 +1,8 @@
+## 0.1.2
+
+* A demo of the example app has been added.
+
+
 ## 0.1.1
 
 * An issue that caused a crash on iOS, when retrieving the text of the last page of the entire document, has been fixed.

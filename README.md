@@ -1,6 +1,16 @@
 # PDF Text Plugin
 
-This plugin for [Flutter](https://flutter.dev) allows you to read the text content of PDF documents and convert it into strings. The plugin works on iOS and Android. On iOS it uses Apple's [PDFKit](https://developer.apple.com/documentation/pdfkit). On Android it uses Apache's [PdfBox](https://github.com/TomRoush/PdfBox-Android) Android porting.
+[![Pub Version](https://img.shields.io/pub/v/pdf_text)](https://pub.dev/packages/pdf_text)
+[![GitHub issues](https://img.shields.io/github/issues/AlessioLuciani/flutter-pdf-text)](https://github.com/AlessioLuciani/flutter-pdf-text/issues)
+[![GitHub forks](https://img.shields.io/github/forks/AlessioLuciani/flutter-pdf-text)](https://github.com/AlessioLuciani/flutter-pdf-text/network)
+[![GitHub stars](https://img.shields.io/github/stars/AlessioLuciani/flutter-pdf-text)](https://github.com/AlessioLuciani/flutter-pdf-text/stargazers)
+[![GitHub license](https://img.shields.io/github/license/AlessioLuciani/flutter-pdf-text)](https://github.com/AlessioLuciani/flutter-pdf-text/blob/master/LICENSE)
+
+This plugin for [Flutter](https://flutter.dev) allows you to read the text content of PDF documents and convert it into strings. It works on iOS and Android. On iOS it uses Apple's [PDFKit](https://developer.apple.com/documentation/pdfkit). On Android it uses Apache's [PdfBox](https://github.com/TomRoush/PdfBox-Android) Android porting.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/AlessioLuciani/flutter-pdf-text/master/example/flutter-pdf-text.gif" alt="Demo Example App" style="margin:auto" width="372" height="686">
+</p>
 
 ## Getting Started
 
@@ -8,7 +18,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  pdf_text: ^0.1.1
+  pdf_text: ^0.1.2
 ```
 
 ## Usage
@@ -58,7 +68,7 @@ String pageText = await page.text;
 ## Functioning
 
 This plugin applies lazy loading for the text contents of the pages. The text is cached page per page. When you request the text of a page for the first time, it is parsed and stored in memory, so that the second access will be faster. Anyway, the text of pages that are not requested is not loaded. This mechanism
-allows you not to waste time loading text that you will probably not use. When you request the text content of the entire document, only the pages that have not been loaded yet, are then loaded.
+allows you not to waste time loading text that you will probably not use. When you request the text content of the entire document, only the pages that have not been loaded yet are then loaded.
 
 ## Public Methods
   
