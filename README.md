@@ -8,7 +8,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  pdf_text: ^0.1.0
+  pdf_text: ^0.1.1
 ```
 
 ## Usage
@@ -54,6 +54,11 @@ Read the text of a page of the document:
 ```dart
 String pageText = await page.text;
 ```
+
+## Functioning
+
+This plugin applies lazy loading for the text contents of the pages. The text is cached page per page. When you request the text of a page for the first time, it is parsed and stored in memory, so that the second access will be faster. Anyway, the text of pages that are not requested is not loaded. This mechanism
+allows you not to waste time loading text that you will probably not use. When you request the text content of the entire document, only the pages that have not been loaded yet, are then loaded.
 
 ## Public Methods
   

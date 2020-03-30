@@ -70,7 +70,7 @@ public class SwiftPdfTextPlugin: NSObject, FlutterPlugin {
         if doc == nil {
             return
         }
-        let text = doc!.page(at: pageNumber)!.string
+        let text = doc!.page(at: pageNumber-1)!.string
         DispatchQueue.main.sync {
             result(text)
         }
@@ -87,7 +87,7 @@ public class SwiftPdfTextPlugin: NSObject, FlutterPlugin {
         }
         var missingPagesTexts = [String]()
         for pageNumber in missingPagesNumbers {
-            missingPagesTexts.append(doc!.page(at: pageNumber)!.string!)
+            missingPagesTexts.append(doc!.page(at: pageNumber-1)!.string!)
         }
         DispatchQueue.main.sync {
             result(missingPagesTexts)

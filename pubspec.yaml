@@ -1,6 +1,6 @@
 name: pdf_text
 description: A Flutter plugin used to extract text from PDF documents.
-version: 0.1.0
+version: 0.1.1
 homepage: https://github.com/AlessioLuciani/flutter-pdf-text
 
 environment:

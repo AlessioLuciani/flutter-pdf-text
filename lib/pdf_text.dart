@@ -108,7 +108,7 @@ class PDFPage {
     if (_text == null) {
       try {
         _text = await _channel.invokeMethod('getDocPageText', {"path": _parentDoc._file.path,
-            "number": _number});
+            "number": number});
       } on Exception catch (e) {
         return Future.error(e);
       }
