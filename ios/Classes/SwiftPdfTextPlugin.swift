@@ -43,10 +43,7 @@ public class SwiftPdfTextPlugin: NSObject, FlutterPlugin {
             }
         }
     }
-  
-
   }
-
 
   /**
               Gets the length of the PDF document in pages.
@@ -86,7 +83,7 @@ public class SwiftPdfTextPlugin: NSObject, FlutterPlugin {
             return
         }
         var missingPagesTexts = [String]()
-        for pageNumber in missingPagesNumbers {
+        missingPagesNumbers.forEach { (pageNumber) in
             missingPagesTexts.append(doc!.page(at: pageNumber-1)!.string!)
         }
         DispatchQueue.main.sync {

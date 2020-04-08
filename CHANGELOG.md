@@ -1,3 +1,7 @@
+## 0.1.3
+
+* Part of the internal logic has been simplified.
+
 ## 0.1.2
 
 * A demo of the example app has been added.

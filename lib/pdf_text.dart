@@ -59,11 +59,11 @@ class PDFDoc {
   Future<String> get text async {
     // Collecting missing pages
     List<int> missingPagesNumbers = List();
-    for (var page in _pages) {
+    _pages.forEach((page) {
       if (page._text == null) {
         missingPagesNumbers.add(page.number);
       }
-    }
+    });
     List<String> missingPagesTexts;
     try {
       missingPagesTexts = List<String>.from(await _channel.invokeMethod('getDocText', {"path": _file.path,
@@ -76,9 +76,9 @@ class PDFDoc {
       pageAt(missingPagesNumbers[i])._text = missingPagesTexts[i];
     }
     String text = "";
-    for (var page in _pages) {
-      text += "${page._text}\n";
-    }
+    _pages.forEach((page)
+        => text += "${page._text}\n"
+    );
     return text;
   }
 

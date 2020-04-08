@@ -1,6 +1,6 @@
 name: pdf_text
 description: This plugin for Flutter allows you to read the text content of PDF documents and convert it into strings. It works on iOS and Android.
-version: 0.1.2
+version: 0.1.3
 homepage: https://github.com/AlessioLuciani/flutter-pdf-text
 
 environment:
