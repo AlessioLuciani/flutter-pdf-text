@@ -1,3 +1,11 @@
+## 0.2.0
+
+* Some new methods have been added to PDFDoc:
+    * fromURL to load a PDF document from an URL.
+    * deleteFile to delete the file related to the document.
+    * deleteAllExternalFiles to delete all the files of the document imported 
+    from outside the local file system.
+
 ## 0.1.3
 
 * Part of the internal logic has been simplified.

@@ -18,7 +18,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  pdf_text: ^0.1.3
+  pdf_text: ^0.2.0
 ```
 
 ## Usage
@@ -39,6 +39,12 @@ or using a path string:
 
 ```dart
 PDFDoc doc = await PDFDoc.fromPath(path);
+```
+
+or using a URL string:
+
+```dart
+PDFDoc doc = await PDFDoc.fromURL(url);
 ```
 
 Read the text of the entire document:
@@ -65,6 +71,24 @@ Read the text of a page of the document:
 String pageText = await page.text;
 ```
 
+Optionally, you can delete the file of a document when you no longer need it.
+This can be useful when you import a PDF document from outside the local
+file system (e.g using a URL), since it is automatically stored in the temporary
+directory of the app.
+
+Delete the file of a single document:
+
+```dart
+doc.deleteFile();
+```
+
+or delete all the files of all the documents imported from outside the local
+file system:
+
+```dart
+PDFDoc.deleteAllExternalFiles();
+```
+
 ## Functioning
 
 This plugin applies lazy loading for the text contents of the pages. The text is cached page per page. When you request the text of a page for the first time, it is parsed and stored in memory, so that the second access will be faster. Anyway, the text of pages that are not requested is not loaded. This mechanism
@@ -81,6 +105,13 @@ allows you not to waste time loading text that you will probably not use. When y
 | static Future\<PDFDoc> | **fromFile(File file)** <br> Creates a PDFDoc object with a File instance. |
 
 | static Future\<PDFDoc> | **fromPath(String path)** <br> Creates a PDFDoc object with a file path. |
+
+| static Future\<PDFDoc> | **fromURL(String url)** <br> Creates a PDFDoc object with a url. It downloads the PDF file located in the given URL and saves it in the app's temporary directory. |
+
+| void | **deleteFile()** <br> Deletes the file related to this PDFDoc.
+ Throws an exception if the FileSystemEntity cannot be deleted. |
+
+| static Future | **deleteAllExternalFiles()** <br> Deletes all the files of the documents that have been imported from outside the local file system (e.g. using fromURL). |
 
 ## Objects
 

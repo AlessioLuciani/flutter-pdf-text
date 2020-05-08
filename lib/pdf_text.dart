@@ -2,15 +2,16 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:http/http.dart' as http;
 
-
-const MethodChannel _channel = const MethodChannel('pdf_text');
+const MethodChannel _CHANNEL = const MethodChannel('pdf_text');
+const String _TEMP_DIR_NAME = "/.flutter_pdf_text/";
 
 /// Class representing a PDF document.
 /// In order to create a new [PDFDoc] instance, one of these two static methods has
 ///  to be used: [PDFDoc.fromFile], [PDFDoc.fromPath].
 class PDFDoc {
-
 
   File _file;
   List<PDFPage> _pages;
@@ -23,7 +24,7 @@ class PDFDoc {
     doc._file = file;
     int length;
     try {
-      length = await _channel.invokeMethod('getDocLength', {"path": file.path});
+      length = await _CHANNEL.invokeMethod('getDocLength', {"path": file.path});
     } on Exception catch (e) {
       return Future.error(e);
     }
@@ -39,7 +40,23 @@ class PDFDoc {
     return await fromFile(File(path));
   }
 
-
+  /// Creates a [PDFDoc] object with a URL.
+  /// It downloads the PDF file located in the given URL and saves it
+  /// in the app's temporary directory.
+  static Future<PDFDoc> fromURL(String url) async {
+    File file;
+    try {
+      String tempDirPath = (await getTemporaryDirectory()).path;
+      String filePath = tempDirPath + _TEMP_DIR_NAME 
+        + url.split("/").last.split(".").first + ".pdf";
+      file = File(filePath);
+      file.createSync(recursive: true);
+      file.writeAsBytesSync((await http.get(url)).bodyBytes);
+    } on Exception catch (e) {
+      return Future.error(e);
+    }
+    return await fromFile(file);
+  }
 
   /// Gets the page of the document at the given page number.
   PDFPage pageAt(int pageNumber) => _pages[pageNumber - 1];
@@ -66,7 +83,7 @@ class PDFDoc {
     });
     List<String> missingPagesTexts;
     try {
-      missingPagesTexts = List<String>.from(await _channel.invokeMethod('getDocText', {"path": _file.path,
+      missingPagesTexts = List<String>.from(await _CHANNEL.invokeMethod('getDocText', {"path": _file.path,
         "missingPagesNumbers": missingPagesNumbers}));
     } on Exception catch (e) {
       return Future.error(e);
@@ -82,9 +99,30 @@ class PDFDoc {
     return text;
   }
 
+  /// Deletes the file related to this [PDFDoc].
+  /// Throws an exception if the [FileSystemEntity] cannot be deleted.
+  void deleteFile() {
+    if (_file.existsSync()) {
+      _file.deleteSync();
+    }
+  }
+
+  /// Deletes all the files of the documents that have been imported
+  /// from outside the local file system (e.g. using [fromURL]).
+  static Future deleteAllExternalFiles() async {
+    try {
+      String tempDirPath = (await getTemporaryDirectory()).path;
+      String dirPath = tempDirPath + _TEMP_DIR_NAME;
+      Directory dir = Directory(dirPath);
+      if (dir.existsSync()) {
+        dir.deleteSync(recursive: true);
+      }
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
 
 }
-
 
 /// Class representing a PDF document page.
 /// It needs not to be directly instantiated, instances will be automatically
@@ -107,7 +145,7 @@ class PDFPage {
     // Loading the text
     if (_text == null) {
       try {
-        _text = await _channel.invokeMethod('getDocPageText', {"path": _parentDoc._file.path,
+        _text = await _CHANNEL.invokeMethod('getDocPageText', {"path": _parentDoc._file.path,
             "number": number});
       } on Exception catch (e) {
         return Future.error(e);
