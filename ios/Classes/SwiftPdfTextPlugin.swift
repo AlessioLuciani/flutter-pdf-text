@@ -23,7 +23,8 @@ public class SwiftPdfTextPlugin: NSObject, FlutterPlugin {
         if call.method == "getDocLength" {
           let args = call.arguments as! NSDictionary
                 let path = args["path"] as! String
-            self.getDocLength(result: result, path: path)
+                let password = args["password"] as! String
+            self.getDocLength(result: result, path: path, password: password)
         } else if call.method == "getDocPageText" {
               let args = call.arguments as! NSDictionary
               let path = args["path"] as! String
@@ -48,8 +49,8 @@ public class SwiftPdfTextPlugin: NSObject, FlutterPlugin {
   /**
               Gets the length of the PDF document in pages.
        */
-      private func getDocLength(result: FlutterResult, path: String) {
-        let doc = getDoc(result: result, path: path)
+      private func getDocLength(result: FlutterResult, path: String, password: String) {
+        let doc = getDoc(result: result, path: path, password: password)
         if doc == nil {
             return
         }
@@ -94,21 +95,30 @@ public class SwiftPdfTextPlugin: NSObject, FlutterPlugin {
     /**
            Gets a PDF document, given its path.
     */
-    private func getDoc(result: FlutterResult, path: String) -> PDFDocument? {
+    private func getDoc(result: FlutterResult, path: String, password: String = "") -> PDFDocument? {
         // Checking for cached document
        if cachedDoc != nil && cachedDocPath == path {
          return cachedDoc
        }
         let doc = PDFDocument(url: URL(fileURLWithPath: path))
-        cachedDoc = doc
-        cachedDocPath = path
         if doc == nil {
             DispatchQueue.main.sync {
                 result(FlutterError(code: "INVALID_PATH",
                 message: "File path is invalid",
                 details: nil))
             }
+            return nil
         }
+        if !doc!.unlock(withPassword: password) {
+          DispatchQueue.main.sync {
+                result(FlutterError(code: "INVALID_PASSWORD",
+                message: "The password is invalid",
+                details: nil))
+            }
+            return nil
+        }
+        cachedDoc = doc
+        cachedDocPath = path
         return doc
     }
     

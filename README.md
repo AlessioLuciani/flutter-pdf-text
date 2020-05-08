@@ -18,7 +18,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  pdf_text: ^0.2.0
+  pdf_text: ^0.2.1
 ```
 
 ## Usage
@@ -29,7 +29,7 @@ Import the package with:
 import 'package:pdf_text/pdf_text.dart';
 ```
 
-Create a PDF document instance using a File object:
+*Create a PDF document instance using a File object:*
 
 ```dart
 PDFDoc doc = await PDFDoc.fromFile(file);
@@ -47,7 +47,13 @@ or using a URL string:
 PDFDoc doc = await PDFDoc.fromURL(url);
 ```
 
-Read the text of the entire document:
+Pass a password for encrypted PDF documents:
+
+```dart
+PDFDoc doc = await PDFDoc.fromFile(file, password: password);
+```
+
+*Read the text of the entire document:*
 
 ```dart
 String docText = await doc.text;
@@ -59,13 +65,13 @@ Retrieve the number of pages of the document:
 int numPages = doc.length;
 ```
 
-Access a page of the document:
+*Access a page of the document:*
 
 ```dart
 PDFPage page = doc.pageAt(pageNumber);
 ```
 
-Read the text of a page of the document:
+*Read the text of a page of the document:*
 
 ```dart
 String pageText = await page.text;
@@ -102,11 +108,11 @@ allows you not to waste time loading text that you will probably not use. When y
 
 | PDFPage | **pageAt(int pageNumber)** <br> Gets the page of the document at the given page number. |
 
-| static Future\<PDFDoc> | **fromFile(File file)** <br> Creates a PDFDoc object with a File instance. |
+| static Future\<PDFDoc> | **fromFile(File file, {String password = ""})** <br> Creates a PDFDoc object with a File instance. Optionally, takes a password for encrypted PDF documents.|
 
-| static Future\<PDFDoc> | **fromPath(String path)** <br> Creates a PDFDoc object with a file path. |
+| static Future\<PDFDoc> | **fromPath(String path, {String password = ""})** <br> Creates a PDFDoc object with a file path. Optionally, takes a password for encrypted PDF documents.|
 
-| static Future\<PDFDoc> | **fromURL(String url)** <br> Creates a PDFDoc object with a url. It downloads the PDF file located in the given URL and saves it in the app's temporary directory. |
+| static Future\<PDFDoc> | **fromURL(String url, {String password = ""})** <br> Creates a PDFDoc object with a url. Optionally, takes a password for encrypted PDF documents. It downloads the PDF file located in the given URL and saves it in the app's temporary directory. |
 
 | void | **deleteFile()** <br> Deletes the file related to this PDFDoc.
  Throws an exception if the FileSystemEntity cannot be deleted. |

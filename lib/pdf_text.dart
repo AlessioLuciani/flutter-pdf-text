@@ -18,13 +18,15 @@ class PDFDoc {
 
   PDFDoc._internal();
 
-  /// Creates a [PDFDoc] object with a File instance.
-  static Future<PDFDoc> fromFile(File file) async {
+  /// Creates a [PDFDoc] object with a [File] instance.
+  /// Optionally, takes a password for encrypted PDF documents.
+  static Future<PDFDoc> fromFile(File file, {String password = ""}) async {
     var doc = PDFDoc._internal();
     doc._file = file;
     int length;
     try {
-      length = await _CHANNEL.invokeMethod('getDocLength', {"path": file.path});
+      length = await _CHANNEL.invokeMethod('getDocLength', 
+          {"path": file.path, "password": password});
     } on Exception catch (e) {
       return Future.error(e);
     }
@@ -36,14 +38,16 @@ class PDFDoc {
   }
 
   /// Creates a [PDFDoc] object with a file path.
-  static Future<PDFDoc> fromPath(String path) async {
-    return await fromFile(File(path));
+  /// Optionally, takes a password for encrypted PDF documents.
+  static Future<PDFDoc> fromPath(String path, {String password = ""}) async {
+    return await fromFile(File(path), password: password);
   }
 
   /// Creates a [PDFDoc] object with a URL.
+  /// Optionally, takes a password for encrypted PDF documents.
   /// It downloads the PDF file located in the given URL and saves it
   /// in the app's temporary directory.
-  static Future<PDFDoc> fromURL(String url) async {
+  static Future<PDFDoc> fromURL(String url, {String password = ""}) async {
     File file;
     try {
       String tempDirPath = (await getTemporaryDirectory()).path;
@@ -55,7 +59,7 @@ class PDFDoc {
     } on Exception catch (e) {
       return Future.error(e);
     }
-    return await fromFile(file);
+    return await fromFile(file, password: password);
   }
 
   /// Gets the page of the document at the given page number.

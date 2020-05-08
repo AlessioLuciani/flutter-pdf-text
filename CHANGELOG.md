@@ -1,3 +1,7 @@
+## 0.2.1
+
+* The support for password-encrypted PDF documents has been added.
+
 ## 0.2.0
 
 * Some new methods have been added to PDFDoc:

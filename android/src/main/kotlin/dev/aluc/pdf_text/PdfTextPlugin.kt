@@ -62,7 +62,8 @@ public class PdfTextPlugin: FlutterPlugin, MethodCallHandler {
           "getDocLength" -> {
             val args = call.arguments as Map<String, Any>
             val path = args["path"] as String
-            getDocLength(result, path)
+            val password = args["password"] as String
+            getDocLength(result, path, password)
           }
           "getDocPageText" -> {
             val args = call.arguments as Map<String, Any>
@@ -92,8 +93,8 @@ public class PdfTextPlugin: FlutterPlugin, MethodCallHandler {
   /**
     Gets the length of the PDF document in pages.
    */
-  private fun getDocLength(result: Result, path: String) {
-    val doc = getDoc(result, path) ?: return
+  private fun getDocLength(result: Result, path: String, password: String) {
+    val doc = getDoc(result, path, password) ?: return
     val length = doc.numberOfPages
     Handler(Looper.getMainLooper()).post {
       result.success(length)
@@ -133,13 +134,13 @@ public class PdfTextPlugin: FlutterPlugin, MethodCallHandler {
   /**
   Gets a PDF document, given its path.
    */
-  private fun getDoc(result: Result, path: String): PDDocument? {
+  private fun getDoc(result: Result, path: String, password: String = ""): PDDocument? {
     // Checking for cached document
     if (cachedDoc != null && cachedDocPath == path) {
       return cachedDoc
     }
     return try {
-      val doc = PDDocument.load(File(path))
+      val doc = PDDocument.load(File(path), password)
       cachedDoc = doc
       cachedDocPath = path
       initTextStripperEngine(doc)
@@ -147,7 +148,7 @@ public class PdfTextPlugin: FlutterPlugin, MethodCallHandler {
     } catch (e: Exception) {
       Handler(Looper.getMainLooper()).post {
         result.error("INVALID_PATH",
-                "File path is invalid",
+                "File path or password (in case of encrypted document) is invalid",
                 null)
       }
       null
