@@ -100,6 +100,13 @@ class PDFDoc {
     _pages.forEach((page)
         => text += "${page._text}\n"
     );
+    if(text.replaceAll(RegExp(r"\s+\b|\n"),"").length<=0){
+     // true, means text have only whiteSpaces and new lines,basically nothing will show on user screen
+    // means pdf contain images that can't convert into text
+    // if you want you can throw exection but i'am just sending a massage that coder show  to users
+      return "Pdf contain images that can't convert to Text...try another Pdf"
+      
+    }
     return text;
   }
 
