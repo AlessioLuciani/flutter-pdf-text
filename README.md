@@ -105,18 +105,12 @@ allows you not to waste time loading text that you will probably not use. When y
 ### PDFDoc
 
 | Return  | Description  |
-
+|---|---|
 | PDFPage | **pageAt(int pageNumber)** <br> Gets the page of the document at the given page number. |
-
 | static Future\<PDFDoc> | **fromFile(File file, {String password = ""})** <br> Creates a PDFDoc object with a File instance. Optionally, takes a password for encrypted PDF documents.|
-
 | static Future\<PDFDoc> | **fromPath(String path, {String password = ""})** <br> Creates a PDFDoc object with a file path. Optionally, takes a password for encrypted PDF documents.|
-
 | static Future\<PDFDoc> | **fromURL(String url, {String password = ""})** <br> Creates a PDFDoc object with a url. Optionally, takes a password for encrypted PDF documents. It downloads the PDF file located in the given URL and saves it in the app's temporary directory. |
-
-| void | **deleteFile()** <br> Deletes the file related to this PDFDoc.
- Throws an exception if the FileSystemEntity cannot be deleted. |
-
+| void | **deleteFile()** <br> Deletes the file related to this PDFDoc.<br>Throws an exception if the FileSystemEntity cannot be deleted. |
 | static Future | **deleteAllExternalFiles()** <br> Deletes all the files of the documents that have been imported from outside the local file system (e.g. using fromURL). |
 
 ## Objects
