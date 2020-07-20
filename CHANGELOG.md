@@ -1,3 +1,7 @@
+## 0.2.2
+
+* Code formatting has been improved and minor issues solved.
+
 ## 0.2.1
 
 * The support for password-encrypted PDF documents has been added.

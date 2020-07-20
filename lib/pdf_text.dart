@@ -12,7 +12,6 @@ const String _TEMP_DIR_NAME = "/.flutter_pdf_text/";
 /// In order to create a new [PDFDoc] instance, one of these two static methods has
 ///  to be used: [PDFDoc.fromFile], [PDFDoc.fromPath].
 class PDFDoc {
-
   File _file;
   List<PDFPage> _pages;
 
@@ -25,8 +24,8 @@ class PDFDoc {
     doc._file = file;
     int length;
     try {
-      length = await _CHANNEL.invokeMethod('getDocLength', 
-          {"path": file.path, "password": password});
+      length = await _CHANNEL.invokeMethod(
+          'getDocLength', {"path": file.path, "password": password});
     } on Exception catch (e) {
       return Future.error(e);
     }
@@ -51,8 +50,10 @@ class PDFDoc {
     File file;
     try {
       String tempDirPath = (await getTemporaryDirectory()).path;
-      String filePath = tempDirPath + _TEMP_DIR_NAME 
-        + url.split("/").last.split(".").first + ".pdf";
+      String filePath = tempDirPath +
+          _TEMP_DIR_NAME +
+          url.split("/").last.split(".").first +
+          ".pdf";
       file = File(filePath);
       file.createSync(recursive: true);
       file.writeAsBytesSync((await http.get(url)).bodyBytes);
@@ -64,7 +65,6 @@ class PDFDoc {
 
   /// Gets the page of the document at the given page number.
   PDFPage pageAt(int pageNumber) => _pages[pageNumber - 1];
-
 
   /// Gets the pages of this document.
   /// The pages indexes start at 0, but the first page has number 1.
@@ -87,8 +87,9 @@ class PDFDoc {
     });
     List<String> missingPagesTexts;
     try {
-      missingPagesTexts = List<String>.from(await _CHANNEL.invokeMethod('getDocText', {"path": _file.path,
-        "missingPagesNumbers": missingPagesNumbers}));
+      missingPagesTexts = List<String>.from(await _CHANNEL.invokeMethod(
+          'getDocText',
+          {"path": _file.path, "missingPagesNumbers": missingPagesNumbers}));
     } on Exception catch (e) {
       return Future.error(e);
     }
@@ -97,9 +98,7 @@ class PDFDoc {
       pageAt(missingPagesNumbers[i])._text = missingPagesTexts[i];
     }
     String text = "";
-    _pages.forEach((page)
-        => text += "${page._text}\n"
-    );
+    _pages.forEach((page) => text += "${page._text}\n");
     return text;
   }
 
@@ -125,14 +124,12 @@ class PDFDoc {
       return Future.error(e);
     }
   }
-
 }
 
 /// Class representing a PDF document page.
 /// It needs not to be directly instantiated, instances will be automatically
 /// created by the [PDFDoc] class.
 class PDFPage {
-
   PDFDoc _parentDoc;
   int _number;
   String _text;
@@ -149,8 +146,8 @@ class PDFPage {
     // Loading the text
     if (_text == null) {
       try {
-        _text = await _CHANNEL.invokeMethod('getDocPageText', {"path": _parentDoc._file.path,
-            "number": number});
+        _text = await _CHANNEL.invokeMethod('getDocPageText',
+            {"path": _parentDoc._file.path, "number": number});
       } on Exception catch (e) {
         return Future.error(e);
       }
@@ -161,4 +158,3 @@ class PDFPage {
   /// Gets the page number.
   int get number => _number + 1;
 }
-

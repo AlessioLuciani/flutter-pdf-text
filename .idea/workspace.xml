@@ -2,42 +2,28 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="359d9309-f8c4-49fc-99be-35ce59d11e3e" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/src/main/kotlin/dev/aluc/pdf_text/PdfTextPlugin.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/kotlin/dev/aluc/pdf_text/PdfTextPlugin.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/ios/.symlinks/plugins/pdf_text/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/example/ios/.symlinks/plugins/pdf_text/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/ios/.symlinks/plugins/pdf_text/android/src/main/kotlin/dev/aluc/pdf_text/PdfTextPlugin.kt" beforeDir="false" afterPath="$PROJECT_DIR$/example/ios/.symlinks/plugins/pdf_text/android/src/main/kotlin/dev/aluc/pdf_text/PdfTextPlugin.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/ios/.symlinks/plugins/pdf_text/lib/pdf_text.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/ios/.symlinks/plugins/pdf_text/lib/pdf_text.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/pdf_text.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pdf_text.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="3.7_WVGA_Nexus_One_API_P" />
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="1ZjKqq1cO3xyBYAryh6bGqCtX8f" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
   <component name="PropertiesComponent">
     <property name="dart.analysis.tool.window.force.activate" value="false" />
     <property name="io.flutter.reload.alreadyRun" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="show.migrate.to.gradle.popup" value="false" />
-  </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
-    </option>
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -64,5 +50,27 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="WindowStateProjectService">
+    <state width="1238" height="477" key="GridCell.Tab.0.bottom" timestamp="1592578822709">
+      <screen x="0" y="23" width="2560" height="1417" />
+    </state>
+    <state width="1238" height="477" key="GridCell.Tab.0.bottom/0.23.2560.1417@0.23.2560.1417" timestamp="1592578822709" />
+    <state width="1238" height="477" key="GridCell.Tab.0.center" timestamp="1592578822709">
+      <screen x="0" y="23" width="2560" height="1417" />
+    </state>
+    <state width="1238" height="477" key="GridCell.Tab.0.center/0.23.2560.1417@0.23.2560.1417" timestamp="1592578822709" />
+    <state width="1238" height="477" key="GridCell.Tab.0.left" timestamp="1592578822708">
+      <screen x="0" y="23" width="2560" height="1417" />
+    </state>
+    <state width="1238" height="477" key="GridCell.Tab.0.left/0.23.2560.1417@0.23.2560.1417" timestamp="1592578822708" />
+    <state width="1238" height="477" key="GridCell.Tab.0.right" timestamp="1592578822709">
+      <screen x="0" y="23" width="2560" height="1417" />
+    </state>
+    <state width="1238" height="477" key="GridCell.Tab.0.right/0.23.2560.1417@0.23.2560.1417" timestamp="1592578822709" />
+    <state x="100" y="123" width="1080" height="1217" key="com.android.tools.idea.avdmanager.AvdListDialog" timestamp="1592577506494">
+      <screen x="0" y="23" width="2560" height="1417" />
+    </state>
+    <state x="100" y="123" width="1080" height="1217" key="com.android.tools.idea.avdmanager.AvdListDialog/0.23.2560.1417@0.23.2560.1417" timestamp="1592577506494" />
   </component>
 </project>
