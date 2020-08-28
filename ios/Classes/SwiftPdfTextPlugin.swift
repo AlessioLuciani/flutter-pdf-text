@@ -58,9 +58,21 @@ public class SwiftPdfTextPlugin: NSObject, FlutterPlugin {
         }
         // Getting the length of the PDF document in pages.
           let length = doc!.pageCount
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd hh:mm:ss"
+        
+        let creationDate = doc!.documentAttributes![PDFDocumentAttribute.creationDateAttribute] != nil
+            ? dateFormatter.string(from: (doc!.documentAttributes![PDFDocumentAttribute.creationDateAttribute]) as! Date)
+        : nil
+        
+        let modificationDate = doc!.documentAttributes![PDFDocumentAttribute.modificationDateAttribute] != nil
+        ? dateFormatter.string(from: (doc!.documentAttributes![PDFDocumentAttribute.modificationDateAttribute] as! Date))
+        : nil
+
                 
-        let data = ["length": length, "info": ["author": doc!.documentAttributes![PDFDocumentAttribute.authorAttribute], "creationDate": doc!.documentAttributes![PDFDocumentAttribute.creationDateAttribute],
-        "modificationDate": doc!.documentAttributes![PDFDocumentAttribute.modificationDateAttribute], "creator": doc!.documentAttributes![PDFDocumentAttribute.creatorAttribute],
+        let data = ["length": length, "info": ["author": doc!.documentAttributes![PDFDocumentAttribute.authorAttribute], "creationDate": creationDate,
+        "modificationDate": modificationDate , "creator": doc!.documentAttributes![PDFDocumentAttribute.creatorAttribute],
         "producer": doc!.documentAttributes![PDFDocumentAttribute.producerAttribute], "keywords": doc!.documentAttributes![PDFDocumentAttribute.keywordsAttribute],
         "title": doc!.documentAttributes![PDFDocumentAttribute.titleAttribute], "subject": doc!.documentAttributes![PDFDocumentAttribute.subjectAttribute]]] as [String : Any]
     

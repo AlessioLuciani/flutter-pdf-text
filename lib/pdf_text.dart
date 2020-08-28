@@ -173,8 +173,7 @@ class PDFDocInfo {
   DateTime _modificationDate;
   String _creator;
   String _producer;
-  List<String>
-      _keywords; // TODO: OR String (parse splitting by ',' and removing lateral spaces)
+  List<String> _keywords;
   String _title;
   String _subject;
 
