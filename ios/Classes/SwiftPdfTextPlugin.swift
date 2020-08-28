@@ -20,11 +20,11 @@ public class SwiftPdfTextPlugin: NSObject, FlutterPlugin {
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
 
     DispatchQueue.global(qos: .default).async {
-        if call.method == "getDocLength" {
+        if call.method == "initDoc" {
           let args = call.arguments as! NSDictionary
                 let path = args["path"] as! String
                 let password = args["password"] as! String
-            self.getDocLength(result: result, path: path, password: password)
+            self.initDoc(result: result, path: path, password: password)
         } else if call.method == "getDocPageText" {
               let args = call.arguments as! NSDictionary
               let path = args["path"] as! String
@@ -45,21 +45,31 @@ public class SwiftPdfTextPlugin: NSObject, FlutterPlugin {
         }
     }
   }
+    
+    
 
   /**
-              Gets the length of the PDF document in pages.
+              Initializes the PDF document and returns some information into the channel.
        */
-      private func getDocLength(result: FlutterResult, path: String, password: String) {
+      private func initDoc(result: FlutterResult, path: String, password: String) {
         let doc = getDoc(result: result, path: path, password: password)
         if doc == nil {
             return
         }
+        // Getting the length of the PDF document in pages.
           let length = doc!.pageCount
+                
+        let data = ["length": length, "info": ["author": doc!.documentAttributes![PDFDocumentAttribute.authorAttribute], "creationDate": doc!.documentAttributes![PDFDocumentAttribute.creationDateAttribute],
+        "modificationDate": doc!.documentAttributes![PDFDocumentAttribute.modificationDateAttribute], "creator": doc!.documentAttributes![PDFDocumentAttribute.creatorAttribute],
+        "producer": doc!.documentAttributes![PDFDocumentAttribute.producerAttribute], "keywords": doc!.documentAttributes![PDFDocumentAttribute.keywordsAttribute],
+        "title": doc!.documentAttributes![PDFDocumentAttribute.titleAttribute], "subject": doc!.documentAttributes![PDFDocumentAttribute.subjectAttribute]]] as [String : Any]
+    
         DispatchQueue.main.sync {
-          result(length)
+            result(data)
         }
       }
     
+  
     /**
             Gets the text  of a document page, given its number.
      */

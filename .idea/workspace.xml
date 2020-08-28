@@ -3,12 +3,29 @@
   <component name="ChangeListManager">
     <list default="true" id="359d9309-f8c4-49fc-99be-35ce59d11e3e" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/main/kotlin/dev/aluc/pdf_text/PdfTextPlugin.kt" beforeDir="false" afterPath="$PROJECT_DIR$/android/src/main/kotlin/dev/aluc/pdf_text/PdfTextPlugin.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/ios/.symlinks/plugins/pdf_text/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/example/ios/.symlinks/plugins/pdf_text/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/ios/.symlinks/plugins/pdf_text/example/ios/Podfile" beforeDir="false" afterPath="$PROJECT_DIR$/example/ios/.symlinks/plugins/pdf_text/example/ios/Podfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/ios/.symlinks/plugins/pdf_text/example/ios/Podfile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/example/ios/.symlinks/plugins/pdf_text/example/ios/Podfile.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/ios/.symlinks/plugins/pdf_text/example/ios/Runner.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/example/ios/.symlinks/plugins/pdf_text/example/ios/Runner.xcodeproj/project.pbxproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/ios/.symlinks/plugins/pdf_text/example/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/ios/.symlinks/plugins/pdf_text/example/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/ios/.symlinks/plugins/pdf_text/example/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/example/ios/.symlinks/plugins/pdf_text/example/pubspec.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/ios/.symlinks/plugins/pdf_text/ios/Classes/SwiftPdfTextPlugin.swift" beforeDir="false" afterPath="$PROJECT_DIR$/example/ios/.symlinks/plugins/pdf_text/ios/Classes/SwiftPdfTextPlugin.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/ios/.symlinks/plugins/pdf_text/lib/pdf_text.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/ios/.symlinks/plugins/pdf_text/lib/pdf_text.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/ios/Podfile" beforeDir="false" afterPath="$PROJECT_DIR$/example/ios/Podfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/ios/Podfile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/example/ios/Podfile.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/ios/Runner.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/example/ios/Runner.xcodeproj/project.pbxproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/example/pubspec.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ios/Classes/SwiftPdfTextPlugin.swift" beforeDir="false" afterPath="$PROJECT_DIR$/ios/Classes/SwiftPdfTextPlugin.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/pdf_text.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pdf_text.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="Pixel_3a_XL_API_29" />
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -52,25 +69,29 @@
     </option>
   </component>
   <component name="WindowStateProjectService">
-    <state width="1238" height="477" key="GridCell.Tab.0.bottom" timestamp="1592578822709">
+    <state width="1238" height="477" key="GridCell.Tab.0.bottom" timestamp="1598653390536">
       <screen x="0" y="23" width="2560" height="1417" />
     </state>
-    <state width="1238" height="477" key="GridCell.Tab.0.bottom/0.23.2560.1417@0.23.2560.1417" timestamp="1592578822709" />
-    <state width="1238" height="477" key="GridCell.Tab.0.center" timestamp="1592578822709">
+    <state width="1238" height="477" key="GridCell.Tab.0.bottom/0.23.2560.1417@0.23.2560.1417" timestamp="1598653390536" />
+    <state width="1238" height="477" key="GridCell.Tab.0.center" timestamp="1598653390535">
       <screen x="0" y="23" width="2560" height="1417" />
     </state>
-    <state width="1238" height="477" key="GridCell.Tab.0.center/0.23.2560.1417@0.23.2560.1417" timestamp="1592578822709" />
-    <state width="1238" height="477" key="GridCell.Tab.0.left" timestamp="1592578822708">
+    <state width="1238" height="477" key="GridCell.Tab.0.center/0.23.2560.1417@0.23.2560.1417" timestamp="1598653390535" />
+    <state width="1238" height="477" key="GridCell.Tab.0.left" timestamp="1598653390535">
       <screen x="0" y="23" width="2560" height="1417" />
     </state>
-    <state width="1238" height="477" key="GridCell.Tab.0.left/0.23.2560.1417@0.23.2560.1417" timestamp="1592578822708" />
-    <state width="1238" height="477" key="GridCell.Tab.0.right" timestamp="1592578822709">
+    <state width="1238" height="477" key="GridCell.Tab.0.left/0.23.2560.1417@0.23.2560.1417" timestamp="1598653390535" />
+    <state width="1238" height="477" key="GridCell.Tab.0.right" timestamp="1598653390536">
       <screen x="0" y="23" width="2560" height="1417" />
     </state>
-    <state width="1238" height="477" key="GridCell.Tab.0.right/0.23.2560.1417@0.23.2560.1417" timestamp="1592578822709" />
+    <state width="1238" height="477" key="GridCell.Tab.0.right/0.23.2560.1417@0.23.2560.1417" timestamp="1598653390535" />
     <state x="100" y="123" width="1080" height="1217" key="com.android.tools.idea.avdmanager.AvdListDialog" timestamp="1592577506494">
       <screen x="0" y="23" width="2560" height="1417" />
     </state>
     <state x="100" y="123" width="1080" height="1217" key="com.android.tools.idea.avdmanager.AvdListDialog/0.23.2560.1417@0.23.2560.1417" timestamp="1592577506494" />
+    <state width="388" height="131" key="javadoc.popup.new" timestamp="1598652201824">
+      <screen x="0" y="23" width="2560" height="1417" />
+    </state>
+    <state width="388" height="131" key="javadoc.popup.new/0.23.2560.1417@0.23.2560.1417" timestamp="1598652201824" />
   </component>
 </project>

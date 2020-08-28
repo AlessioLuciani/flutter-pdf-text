@@ -13,6 +13,7 @@ const String _TEMP_DIR_NAME = "/.flutter_pdf_text/";
 ///  to be used: [PDFDoc.fromFile], [PDFDoc.fromPath].
 class PDFDoc {
   File _file;
+  PDFDocInfo _info;
   List<PDFPage> _pages;
 
   PDFDoc._internal();
@@ -22,17 +23,18 @@ class PDFDoc {
   static Future<PDFDoc> fromFile(File file, {String password = ""}) async {
     var doc = PDFDoc._internal();
     doc._file = file;
-    int length;
+    Map data;
     try {
-      length = await _CHANNEL.invokeMethod(
-          'getDocLength', {"path": file.path, "password": password});
+      data = await _CHANNEL
+          .invokeMethod('initDoc', {"path": file.path, "password": password});
     } on Exception catch (e) {
       return Future.error(e);
     }
     doc._pages = List();
-    for (int i = 0; i < length; i++) {
+    for (int i = 0; i < data["length"]; i++) {
       doc._pages.add(PDFPage._fromDoc(doc, i));
     }
+    doc._info = PDFDocInfo._fromMap(data["info"]);
     return doc;
   }
 
@@ -75,6 +77,9 @@ class PDFDoc {
 
   /// Gets the number of pages of this document.
   int get length => _pages.length;
+
+  /// Gets the information of this document.
+  PDFDocInfo get info => _info;
 
   /// Gets the entire text content of the document.
   Future<String> get text async {
@@ -157,4 +162,72 @@ class PDFPage {
 
   /// Gets the page number.
   int get number => _number + 1;
+}
+
+/// Class representing the information of a PDF document.
+/// It needs not to be directly instantiated, instances will be automatically
+/// created by the [PDFDoc] class.
+class PDFDocInfo {
+  String _author;
+  DateTime _creationDate;
+  DateTime _modificationDate;
+  String _creator;
+  String _producer;
+  List<String>
+      _keywords; // TODO: OR String (parse splitting by ',' and removing lateral spaces)
+  String _title;
+  String _subject;
+
+  PDFDocInfo._fromMap(Map data)
+      : this._internal(
+            data["author"],
+            data["creationDate"] != null
+                ? DateTime.tryParse(data["creationDate"])
+                : null,
+            data["modificationDate"] != null
+                ? DateTime.tryParse(data["modificationDate"])
+                : null,
+            data["creator"],
+            data["producer"],
+            data["keywords"] != null
+                ? List<String>.from(data["keywords"])
+                : null,
+            data["title"],
+            data["subject"]);
+
+  PDFDocInfo._internal(
+      this._author,
+      this._creationDate,
+      this._modificationDate,
+      this._creator,
+      this._producer,
+      this._keywords,
+      this._title,
+      this._subject);
+
+  /// Gets the author of the document. Returns null if no author exists.
+  String get author => _author;
+
+  /// Gets the creation date of the document. Returns null if no creation
+  /// date exists.
+  DateTime get creationDate => _creationDate;
+
+  /// Gets the modification date of the document. Returns null if no
+  /// modification date exists.
+  DateTime get modificationDate => _modificationDate;
+
+  /// Gets the creator of the document. Returns null if no creator exists.
+  String get creator => _creator;
+
+  /// Gets the producer of the document. Returns null if no producer exists.
+  String get producer => _producer;
+
+  /// Gets the list of keywords of the document. Returns null if no keyword exists.
+  List<String> get keywords => _keywords;
+
+  /// Gets the title of the document. Returns null if no title exists.
+  String get title => _title;
+
+  /// Gets the subject of the document. Returns null if no subject exists.
+  String get subject => _subject;
 }

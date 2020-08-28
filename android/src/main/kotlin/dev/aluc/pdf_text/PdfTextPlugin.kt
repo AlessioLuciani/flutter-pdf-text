@@ -59,11 +59,11 @@ public class PdfTextPlugin: FlutterPlugin, MethodCallHandler {
   override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
     thread (start = true) {
       when (call.method) {
-          "getDocLength" -> {
+          "initDoc" -> {
             val args = call.arguments as Map<String, Any>
             val path = args["path"] as String
             val password = args["password"] as String
-            getDocLength(result, path, password)
+            initDoc(result, path, password)
           }
           "getDocPageText" -> {
             val args = call.arguments as Map<String, Any>
@@ -91,14 +91,54 @@ public class PdfTextPlugin: FlutterPlugin, MethodCallHandler {
   }
 
   /**
-    Gets the length of the PDF document in pages.
+    Initializes the PDF document and returns some information into the channel.
    */
-  private fun getDocLength(result: Result, path: String, password: String) {
+  private fun initDoc(result: Result, path: String, password: String) {
     val doc = getDoc(result, path, password) ?: return
+    // Getting the length of the PDF document in pages.
     val length = doc.numberOfPages
-    Handler(Looper.getMainLooper()).post {
-      result.success(length)
+
+    val info = doc.documentInformation
+
+    var creationDate: String? = null
+    if (info.creationDate != null) {
+      creationDate = info.creationDate.time.toString()
     }
+    var modificationDate: String? = null
+    if (info.modificationDate != null) {
+      modificationDate = info.modificationDate.time.toString()
+    }
+    val data = hashMapOf<String, Any>(
+            "length" to length,
+            "info" to hashMapOf("author" to info.author,
+                    "creationDate" to creationDate,
+                    "modificationDate" to modificationDate,
+                    "creator" to info.creator, "producer" to info.producer,
+                    "keywords" to splitKeywords(info.keywords),
+                    "title" to info.title, "subject" to info.subject
+            )
+    )
+
+    Handler(Looper.getMainLooper()).post {
+      result.success(data)
+    }
+  }
+
+  /**
+   * Splits a string of keywords into a list of strings.
+   */
+  private fun splitKeywords(keywordsString: String?): List<String>? {
+    if (keywordsString == null) {
+      return null
+    }
+    var keywords = keywordsString.split(",").toMutableList()
+    for (i in keywords.indices) {
+      var keyword = keywords[i]
+      keyword = keyword.dropWhile { it == ' ' }
+      keyword = keyword.dropLastWhile { it == ' ' }
+      keywords[i] = keyword
+    }
+    return keywords
   }
 
   /**
