@@ -93,14 +93,6 @@ class _MyAppState extends State<MyApp> {
   Future _pickPDFText() async {
     File file = await FilePicker.getFile();
     _pdfDoc = await PDFDoc.fromFile(file);
-    print(_pdfDoc.info.producer);
-    print(_pdfDoc.info.creator);
-    print(_pdfDoc.info.creationDate);
-    print(_pdfDoc.info.modificationDate);
-    print(_pdfDoc.info.subject);
-    print(_pdfDoc.info.keywords);
-    print(_pdfDoc.info.title);
-    print(_pdfDoc.info.author);
     setState(() {});
   }
 

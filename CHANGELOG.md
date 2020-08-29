@@ -1,3 +1,8 @@
+## 0.3.0
+
+* A class for the PDF document information has been added. Now this information
+is retrieved on the initialization of the document.
+
 ## 0.2.2
 
 * Code formatting has been improved and minor issues solved.

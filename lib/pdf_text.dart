@@ -204,8 +204,37 @@ class PDFDocInfo {
       this._title,
       this._subject);
 
-  /// Gets the author of the document. Returns null if no author exists.
+  /// Gets the author of the document. This contains the original string of the
+  /// authors contained in the document. Therefore there might be multiple
+  /// authors separated by comma. Returns null if no author exists.
   String get author => _author;
+
+  /// Gets the list of authors of the document. This is inferred by splitting
+  /// the author string by comma. Returns null if no author exists.
+  List<String> get authors {
+    if (author == null) {
+      return null;
+    }
+    var authorString = author.replaceAll(";", ",");
+    authorString = authorString.replaceAll("&", ",");
+    authorString = authorString.replaceAll("and", ",");
+    List<String> splitted = authorString.split(",");
+    List<String> ret = List();
+    for (var token in splitted) {
+      var start = 0;
+      var end = token.length - 1;
+      while (start < token.length && token[start] == ' ') {
+        start++;
+      }
+      while (end >= 0 && token[end] == ' ') {
+        end--;
+      }
+      if (end - start >= 0) {
+        ret.add(token.substring(start, end + 1));
+      }
+    }
+    return ret;
+  }
 
   /// Gets the creation date of the document. Returns null if no creation
   /// date exists.
