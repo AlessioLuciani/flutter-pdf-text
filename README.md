@@ -77,6 +77,12 @@ PDFPage page = doc.pageAt(pageNumber);
 String pageText = await page.text;
 ```
 
+*Read the information of the document:*
+
+```dart
+PDFDocInfo info = doc.info;
+```
+
 Optionally, you can delete the file of a document when you no longer need it.
 This can be useful when you import a PDF document from outside the local
 file system (e.g using a URL), since it is automatically stored in the temporary
@@ -125,6 +131,18 @@ class PDFDoc {
 class PDFPage {
   int number; // Number of the page in the document
   Future<String> text; // Text of the page
+}
+
+class PDFDocInfo {
+  String author; // Author string of the document
+  List<String> authors; // Authors of the document
+  DateTime creationDate; // Creation date of the document
+  DateTime modificationDate; // Modification date of the document
+  String creator; // Creator of the document
+  String producer; // Producer of the document
+  List<String> keywords; // Keywords of the document
+  String title; // Title of the document
+  String subject; // Subject of the document
 }
 ```
 
