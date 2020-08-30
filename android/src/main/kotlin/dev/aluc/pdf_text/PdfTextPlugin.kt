@@ -63,7 +63,8 @@ public class PdfTextPlugin: FlutterPlugin, MethodCallHandler {
             val args = call.arguments as Map<String, Any>
             val path = args["path"] as String
             val password = args["password"] as String
-            initDoc(result, path, password)
+            val fastInit = args["fastInit"] as Boolean
+            initDoc(result, path, password, fastInit)
           }
           "getDocPageText" -> {
             val args = call.arguments as Map<String, Any>
@@ -93,8 +94,8 @@ public class PdfTextPlugin: FlutterPlugin, MethodCallHandler {
   /**
     Initializes the PDF document and returns some information into the channel.
    */
-  private fun initDoc(result: Result, path: String, password: String) {
-    val doc = getDoc(result, path, password) ?: return
+  private fun initDoc(result: Result, path: String, password: String, fastInit: Boolean) {
+    val doc = getDoc(result, path, password, !fastInit) ?: return
     // Getting the length of the PDF document in pages.
     val length = doc.numberOfPages
 
@@ -173,8 +174,10 @@ public class PdfTextPlugin: FlutterPlugin, MethodCallHandler {
 
   /**
   Gets a PDF document, given its path.
+  Initializes the text stripper engine if initTextStripper is true.
    */
-  private fun getDoc(result: Result, path: String, password: String = ""): PDDocument? {
+  private fun getDoc(result: Result, path: String, password: String = "",
+    initTextStripper: Boolean = true): PDDocument? {
     // Checking for cached document
     if (cachedDoc != null && cachedDocPath == path) {
       return cachedDoc
@@ -183,7 +186,9 @@ public class PdfTextPlugin: FlutterPlugin, MethodCallHandler {
       val doc = PDDocument.load(File(path), password)
       cachedDoc = doc
       cachedDocPath = path
-      initTextStripperEngine(doc)
+      if (initTextStripper) {
+        initTextStripperEngine(doc)
+      }
       doc
     } catch (e: Exception) {
       Handler(Looper.getMainLooper()).post {

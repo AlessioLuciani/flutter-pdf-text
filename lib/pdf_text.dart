@@ -19,14 +19,20 @@ class PDFDoc {
   PDFDoc._internal();
 
   /// Creates a [PDFDoc] object with a [File] instance.
-  /// Optionally, takes a password for encrypted PDF documents.
-  static Future<PDFDoc> fromFile(File file, {String password = ""}) async {
+  /// Optionally, takes a [password] for encrypted PDF documents.
+  /// If [fastInit] is true, the initialization of the document will
+  /// be faster on Android. In that case, the text stripper engine
+  /// will not be initialized with this call, but later when some text
+  /// is read. This means that the first text read will take some time
+  /// but the document data can be accessed immediately.
+  static Future<PDFDoc> fromFile(File file,
+      {String password = "", bool fastInit = false}) async {
     var doc = PDFDoc._internal();
     doc._file = file;
     Map data;
     try {
-      data = await _CHANNEL
-          .invokeMethod('initDoc', {"path": file.path, "password": password});
+      data = await _CHANNEL.invokeMethod('initDoc',
+          {"path": file.path, "password": password, "fastInit": fastInit});
     } on Exception catch (e) {
       return Future.error(e);
     }
@@ -39,16 +45,28 @@ class PDFDoc {
   }
 
   /// Creates a [PDFDoc] object with a file path.
-  /// Optionally, takes a password for encrypted PDF documents.
-  static Future<PDFDoc> fromPath(String path, {String password = ""}) async {
-    return await fromFile(File(path), password: password);
+  /// Optionally, takes a [password] for encrypted PDF documents.
+  /// If [fastInit] is true, the initialization of the document will
+  /// be faster on Android. In that case, the text stripper engine
+  /// will not be initialized with this call, but later when some text
+  /// is read. This means that the first text read will take some time
+  /// but the document data can be accessed immediately.
+  static Future<PDFDoc> fromPath(String path,
+      {String password = "", bool fastInit = false}) async {
+    return await fromFile(File(path), password: password, fastInit: fastInit);
   }
 
   /// Creates a [PDFDoc] object with a URL.
-  /// Optionally, takes a password for encrypted PDF documents.
+  /// Optionally, takes a [password] for encrypted PDF documents.
+  /// If [fastInit] is true, the initialization of the document will
+  /// be faster on Android. In that case, the text stripper engine
+  /// will not be initialized with this call, but later when some text
+  /// is read. This means that the first text read will take some time
+  /// but the document data can be accessed immediately.
   /// It downloads the PDF file located in the given URL and saves it
   /// in the app's temporary directory.
-  static Future<PDFDoc> fromURL(String url, {String password = ""}) async {
+  static Future<PDFDoc> fromURL(String url,
+      {String password = "", bool fastInit = false}) async {
     File file;
     try {
       String tempDirPath = (await getTemporaryDirectory()).path;
@@ -62,7 +80,7 @@ class PDFDoc {
     } on Exception catch (e) {
       return Future.error(e);
     }
-    return await fromFile(file, password: password);
+    return await fromFile(file, password: password, fastInit: fastInit);
   }
 
   /// Gets the page of the document at the given page number.
