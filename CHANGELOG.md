@@ -1,3 +1,7 @@
+## 0.3.1
+
+* The possibility to initialize a document faster (without immediately initializing the text stripper engine) on Android has been added.
+
 ## 0.3.0
 
 * A class for the PDF document information has been added. Now this information
