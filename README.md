@@ -53,6 +53,12 @@ Pass a password for encrypted PDF documents:
 PDFDoc doc = await PDFDoc.fromFile(file, password: password);
 ```
 
+Use faster initialization on Android:
+
+```dart
+PDFDoc doc = await PDFDoc.fromFile(file, fastInit: true);
+```
+
 *Read the text of the entire document:*
 
 ```dart
@@ -113,9 +119,9 @@ allows you not to waste time loading text that you will probably not use. When y
 | Return  | Description  |
 |---|---|
 | PDFPage | **pageAt(int pageNumber)** <br> Gets the page of the document at the given page number. |
-| static Future\<PDFDoc> | **fromFile(File file, {String password = ""})** <br> Creates a PDFDoc object with a File instance. Optionally, takes a password for encrypted PDF documents.|
-| static Future\<PDFDoc> | **fromPath(String path, {String password = ""})** <br> Creates a PDFDoc object with a file path. Optionally, takes a password for encrypted PDF documents.|
-| static Future\<PDFDoc> | **fromURL(String url, {String password = ""})** <br> Creates a PDFDoc object with a url. Optionally, takes a password for encrypted PDF documents. It downloads the PDF file located in the given URL and saves it in the app's temporary directory. |
+| static Future\<PDFDoc> | **fromFile(File file, {String password = "", bool fastInit = false})** <br> Creates a PDFDoc object with a File instance. Optionally, takes a password for encrypted PDF documents. If fastInit is true, the initialization of the document will be faster on Android. In that case, the text stripper engine will not be initialized with this call, but later when some text is read. This means that the first text read will take some time but the document data can be accessed immediately.|
+| static Future\<PDFDoc> | **fromPath(String path, {String password = "", bool fastInit = false})** <br> Creates a PDFDoc object with a file path. Optionally, takes a password for encrypted PDF documents. If fastInit is true, the initialization of the document will be faster on Android. In that case, the text stripper engine will not be initialized with this call, but later when some text is read. This means that the first text read will take some time but the document data can be accessed immediately.|
+| static Future\<PDFDoc> | **fromURL(String url, {String password = "", bool fastInit = false})** <br> Creates a PDFDoc object with a url. Optionally, takes a password for encrypted PDF documents. If fastInit is true, the initialization of the document will be faster on Android. In that case, the text stripper engine will not be initialized with this call, but later when some text is read. This means that the first text read will take some time but the document data can be accessed immediately. It downloads the PDF file located in the given URL and saves it in the app's temporary directory. |
 | void | **deleteFile()** <br> Deletes the file related to this PDFDoc.<br>Throws an exception if the FileSystemEntity cannot be deleted. |
 | static Future | **deleteAllExternalFiles()** <br> Deletes all the files of the documents that have been imported from outside the local file system (e.g. using fromURL). |
 
