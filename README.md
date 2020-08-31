@@ -18,7 +18,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  pdf_text: ^0.3.0
+  pdf_text: ^0.3.1
 ```
 
 ## Usage
