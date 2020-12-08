@@ -1,43 +1,30 @@
 package dev.aluc.pdf_text
 
+
 import android.os.Handler
 import android.os.Looper
 import androidx.annotation.NonNull
+import com.tom_roush.pdfbox.pdmodel.PDDocument
+import com.tom_roush.pdfbox.text.PDFTextStripper
+import com.tom_roush.pdfbox.util.PDFBoxResourceLoader
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.common.PluginRegistry.Registrar
-
 import java.io.File
-
-
-import com.tom_roush.pdfbox.pdmodel.PDDocument
-import com.tom_roush.pdfbox.pdmodel.PDPage
-import com.tom_roush.pdfbox.text.PDFTextStripper
 import kotlin.concurrent.thread
 
 /** PdfTextPlugin */
-public class PdfTextPlugin: FlutterPlugin, MethodCallHandler {
+class PdfTextPlugin: FlutterPlugin, MethodCallHandler {
 
-  /**
-   * PDF document cached from the previous use.
-   */
-  private var cachedDoc: PDDocument? = null
-  private var cachedDocPath: String? = null
-
-  /**
-   * PDF text stripper.
-   */
-  private var pdfTextStripper = PDFTextStripper()
-
+  @Suppress("DEPRECATION")
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-    val channel = MethodChannel(flutterPluginBinding.getFlutterEngine().getDartExecutor(), "pdf_text")
-    channel.setMethodCallHandler(PdfTextPlugin());
+    val channel = MethodChannel(flutterPluginBinding.flutterEngine.dartExecutor, "pdf_text")
+    channel.setMethodCallHandler(PdfTextPlugin())
+    PDFBoxResourceLoader.init(flutterPluginBinding.applicationContext)
   }
-
-
 
   // This static function is optional and equivalent to onAttachedToEngine. It supports the old
   // pre-Flutter-1.12 Android projects. You are encouraged to continue supporting
@@ -53,9 +40,11 @@ public class PdfTextPlugin: FlutterPlugin, MethodCallHandler {
     fun registerWith(registrar: Registrar) {
       val channel = MethodChannel(registrar.messenger(), "pdf_text")
       channel.setMethodCallHandler(PdfTextPlugin())
+      PDFBoxResourceLoader.init(registrar.context())
     }
   }
 
+  @Suppress("UNCHECKED_CAST")
   override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
     thread (start = true) {
       when (call.method) {
@@ -63,8 +52,7 @@ public class PdfTextPlugin: FlutterPlugin, MethodCallHandler {
             val args = call.arguments as Map<String, Any>
             val path = args["path"] as String
             val password = args["password"] as String
-            val fastInit = args["fastInit"] as Boolean
-            initDoc(result, path, password, fastInit)
+            initDoc(result, path, password)
           }
           "getDocPageText" -> {
             val args = call.arguments as Map<String, Any>
@@ -82,7 +70,6 @@ public class PdfTextPlugin: FlutterPlugin, MethodCallHandler {
             Handler(Looper.getMainLooper()).post {
               result.notImplemented()
             }
-
           }
       }
     }
@@ -94,34 +81,35 @@ public class PdfTextPlugin: FlutterPlugin, MethodCallHandler {
   /**
     Initializes the PDF document and returns some information into the channel.
    */
-  private fun initDoc(result: Result, path: String, password: String, fastInit: Boolean) {
-    val doc = getDoc(result, path, password, !fastInit) ?: return
-    // Getting the length of the PDF document in pages.
-    val length = doc.numberOfPages
+  private fun initDoc(result: Result, path: String, password: String) {
+    getDoc(result, path, password)?.use { doc ->
+      // Getting the length of the PDF document in pages.
+      val length = doc.numberOfPages
 
-    val info = doc.documentInformation
+      val info = doc.documentInformation
 
-    var creationDate: String? = null
-    if (info.creationDate != null) {
-      creationDate = info.creationDate.time.toString()
-    }
-    var modificationDate: String? = null
-    if (info.modificationDate != null) {
-      modificationDate = info.modificationDate.time.toString()
-    }
-    val data = hashMapOf<String, Any>(
-            "length" to length,
-            "info" to hashMapOf("author" to info.author,
-                    "creationDate" to creationDate,
-                    "modificationDate" to modificationDate,
-                    "creator" to info.creator, "producer" to info.producer,
-                    "keywords" to splitKeywords(info.keywords),
-                    "title" to info.title, "subject" to info.subject
-            )
-    )
+      var creationDate: String? = null
+      if (info.creationDate != null) {
+        creationDate = info.creationDate.time.toString()
+      }
+      var modificationDate: String? = null
+      if (info.modificationDate != null) {
+        modificationDate = info.modificationDate.time.toString()
+      }
+      val data = hashMapOf<String, Any>(
+              "length" to length,
+              "info" to hashMapOf("author" to info.author,
+                      "creationDate" to creationDate,
+                      "modificationDate" to modificationDate,
+                      "creator" to info.creator, "producer" to info.producer,
+                      "keywords" to splitKeywords(info.keywords),
+                      "title" to info.title, "subject" to info.subject
+              )
+      )
 
-    Handler(Looper.getMainLooper()).post {
-      result.success(data)
+      Handler(Looper.getMainLooper()).post {
+        result.success(data)
+      }
     }
   }
 
@@ -132,7 +120,7 @@ public class PdfTextPlugin: FlutterPlugin, MethodCallHandler {
     if (keywordsString == null) {
       return null
     }
-    var keywords = keywordsString.split(",").toMutableList()
+    val keywords = keywordsString.split(",").toMutableList()
     for (i in keywords.indices) {
       var keyword = keywords[i]
       keyword = keyword.dropWhile { it == ' ' }
@@ -146,12 +134,14 @@ public class PdfTextPlugin: FlutterPlugin, MethodCallHandler {
     Gets the text  of a document page, given its number.
    */
   private fun getDocPageText(result: Result, path: String, pageNumber: Int) {
-    val doc = getDoc(result, path) ?: return
-    pdfTextStripper.startPage = pageNumber
-    pdfTextStripper.endPage = pageNumber
-    val text = pdfTextStripper.getText(doc)
-    Handler(Looper.getMainLooper()).post {
-      result.success(text)
+    getDoc(result, path)?.use { doc ->
+      val stripper = PDFTextStripper();
+      stripper.startPage = pageNumber
+      stripper.endPage = pageNumber
+      val text = stripper.getText(doc)
+      Handler(Looper.getMainLooper()).post {
+        result.success(text)
+      }
     }
   }
 
@@ -160,15 +150,17 @@ public class PdfTextPlugin: FlutterPlugin, MethodCallHandler {
   In order to improve the performance, it only retrieves the pages that are currently missing.
    */
   private fun getDocText(result: Result, path: String, missingPagesNumbers: List<Int>) {
-    val doc = getDoc(result, path) ?: return
-    var missingPagesTexts = arrayListOf<String>()
-    missingPagesNumbers.forEach {
-      pdfTextStripper.startPage = it
-      pdfTextStripper.endPage = it
-      missingPagesTexts.add(pdfTextStripper.getText(doc))
-    }
-    Handler(Looper.getMainLooper()).post {
-      result.success(missingPagesTexts)
+    getDoc(result, path)?.use { doc ->
+      val missingPagesTexts = arrayListOf<String>()
+      val stripper = PDFTextStripper();
+      missingPagesNumbers.forEach {
+        stripper.startPage = it
+        stripper.endPage = it
+        missingPagesTexts.add(stripper.getText(doc))
+      }
+      Handler(Looper.getMainLooper()).post {
+        result.success(missingPagesTexts)
+      }
     }
   }
 
@@ -176,20 +168,9 @@ public class PdfTextPlugin: FlutterPlugin, MethodCallHandler {
   Gets a PDF document, given its path.
   Initializes the text stripper engine if initTextStripper is true.
    */
-  private fun getDoc(result: Result, path: String, password: String = "",
-    initTextStripper: Boolean = true): PDDocument? {
-    // Checking for cached document
-    if (cachedDoc != null && cachedDocPath == path) {
-      return cachedDoc
-    }
+  private fun getDoc(result: Result, path: String, password: String = ""): PDDocument? {
     return try {
-      val doc = PDDocument.load(File(path), password)
-      cachedDoc = doc
-      cachedDocPath = path
-      if (initTextStripper) {
-        initTextStripperEngine(doc)
-      }
-      doc
+      PDDocument.load(File(path), password)
     } catch (e: Exception) {
       Handler(Looper.getMainLooper()).post {
         result.error("INVALID_PATH",
@@ -198,14 +179,5 @@ public class PdfTextPlugin: FlutterPlugin, MethodCallHandler {
       }
       null
     }
-  }
-
-  /**
-   * Initializes the text stripper engine. This can take some time.
-   */
-  private fun initTextStripperEngine(doc: PDDocument) {
-    pdfTextStripper.startPage = 1
-    pdfTextStripper.endPage = 1
-    pdfTextStripper.getText(doc)
   }
 }
