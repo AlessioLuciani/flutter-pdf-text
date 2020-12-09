@@ -8,9 +8,9 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf_text/pdf_text.dart';
 import 'package:pdf_text/client_provider.dart';
-import 'utils/doc_info.dart';
 import 'utils/info_matcher.dart';
 import 'utils/pdf_test_utils.dart';
+import 'utils/test_doc_info.dart';
 import 'utils/text_matcher.dart';
 import 'package:http/testing.dart';
 import 'package:http/http.dart';
@@ -48,13 +48,12 @@ void main() async {
 
     test("should read full content from a single-page pdf document", () async {
 
-      final info = DocInfo(
+      final info = TestDocInfo(
         title : "Summa Theologiae",
         author: "St Thomas Aquinas",
         creator: "PDF Creator",
         subject: "The most profound theological book ever written",
-        keywords: "Doctor,Angelicus",
-        producer: "Aristotle"
+        keywords: "Doctor,Angelicus"
       );
 
       List<String> page = [
@@ -76,7 +75,7 @@ void main() async {
         expect(await doc.text, textMatches(page));
         expect(doc.pages.length, 1);
         expect(await doc.pages.first.text, textMatches(page));
-        expect(doc.info, infoMatches(info));
+        expect(TestDocInfo.fromPDFDocInfo(doc.info), infoMatches(info));
       });
 
       fromPath.deleteFile();
@@ -85,13 +84,12 @@ void main() async {
 
     test("should read full content from a multi-page pdf document", () async {
 
-      final info = DocInfo(
+      final info = TestDocInfo(
         title : "Sherlock Holmes series",
         author: "Sr Arthur Conan Doyle",
         creator: "PDF Creator",
         subject: "Detecitve stories",
-        keywords: "Holmes,Watson",
-        producer: "Wandsworth Publishing"
+        keywords: "Holmes,Watson"
       );
 
       List<String> page1 = [
@@ -119,7 +117,7 @@ void main() async {
         expect(doc.pages.length, 2);
         expect(await doc.pages[0].text, textMatches(page1));
         expect(await doc.pages[1].text, textMatches(page2));
-        expect(doc.info, infoMatches(info));
+        expect(TestDocInfo.fromPDFDocInfo(doc.info), infoMatches(info));
         expect(await doc.text, textMatches([...page1, ...page2]));
       });
 

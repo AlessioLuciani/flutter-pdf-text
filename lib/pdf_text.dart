@@ -7,7 +7,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:pdf_text/client_provider.dart';
 
 const MethodChannel _CHANNEL = const MethodChannel('pdf_text');
-const String _TEMP_DIR_NAME = ".flutter_pdf_text/";
+const String _TEMP_DIR_NAME = ".flutter_pdf_text";
 
 /// Class representing a PDF document.
 /// In order to create a new [PDFDoc] instance, one of these two static methods has
@@ -72,8 +72,8 @@ class PDFDoc {
     try {
       String tempDirPath = (await getTemporaryDirectory()).path;
 
-      String filePath = join(tempDirPath, _TEMP_DIR_NAME) +
-          url.split("/").last.split(".").first + ".pdf";
+      String filePath = join(tempDirPath, _TEMP_DIR_NAME,
+          url.split("/").last.split(".").first + ".pdf");
 
       file = File(filePath);
       file.createSync(recursive: true);

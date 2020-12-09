@@ -9,7 +9,7 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf_text/pdf_text.dart';
 import 'package:uuid/uuid.dart';
 
-import 'doc_info.dart';
+import 'test_doc_info.dart';
 
 class PdfTestUtils {
 
@@ -17,9 +17,9 @@ class PdfTestUtils {
 
   PdfTestUtils(this.testDirectoryPath);
 
-  /// Creates a basic potentially multipage pdf document with optional info and
+  /// Creates a basic, single or multipage pdf document with optional info and
   /// saves it to a File that is subsequently returned wrapped in a Future
-  Future<File> createPdfFile(List<List<String>> pages, {DocInfo info}) async {
+  Future<File> createPdfFile(List<List<String>> pages, {TestDocInfo info}) async {
 
     final pdf = Optional.ofNullable(info).map(
             (i) => pw.Document(
@@ -27,12 +27,11 @@ class PdfTestUtils {
                 author: i.author,
                 creator: i.creator,
                 subject: i.subject,
-                keywords: i.keywords,
-                producer: i.producer)
+                keywords: i.keywords)
     ).orElse(pw.Document());
 
     final pdfPages = pages.map((page) => pw.MultiPage(
-       /// a3 format so long lines will not be broken
+       /// a3 format so long lines will hopefully not be broken
         pageFormat: PdfPageFormat.a3,
         build: (pw.Context context) =>
           page.map((line) =>
