@@ -2,11 +2,12 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/services.dart';
+import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:http/http.dart' as http;
+import 'package:pdf_text/client_provider.dart';
 
 const MethodChannel _CHANNEL = const MethodChannel('pdf_text');
-const String _TEMP_DIR_NAME = "/.flutter_pdf_text/";
+const String _TEMP_DIR_NAME = ".flutter_pdf_text/";
 
 /// Class representing a PDF document.
 /// In order to create a new [PDFDoc] instance, one of these two static methods has
@@ -70,13 +71,13 @@ class PDFDoc {
     File file;
     try {
       String tempDirPath = (await getTemporaryDirectory()).path;
-      String filePath = tempDirPath +
-          _TEMP_DIR_NAME +
-          url.split("/").last.split(".").first +
-          ".pdf";
+
+      String filePath = join(tempDirPath, _TEMP_DIR_NAME) +
+          url.split("/").last.split(".").first + ".pdf";
+
       file = File(filePath);
       file.createSync(recursive: true);
-      file.writeAsBytesSync((await http.get(url)).bodyBytes);
+      file.writeAsBytesSync((await ClientProvider().client.get(url)).bodyBytes);
     } on Exception catch (e) {
       return Future.error(e);
     }
@@ -120,9 +121,12 @@ class PDFDoc {
     for (var i = 0; i < missingPagesNumbers.length; i++) {
       pageAt(missingPagesNumbers[i])._text = missingPagesTexts[i];
     }
-    String text = "";
-    _pages.forEach((page) => text += "${page._text}\n");
-    return text;
+    /// Removed the \n added at the end of each page here (potentially a breaking change!).
+    /// Since every page can be retrieved individually, the client knows exactly
+    /// where it begins and where it ends, therefore there is no benefit of
+    /// introducing an artificial page separator that is not part of the pdf
+    /// document per se
+    return _pages.fold<String>("", (pv, page) => "$pv${page._text}");
   }
 
   /// Deletes the file related to this [PDFDoc].
@@ -137,9 +141,10 @@ class PDFDoc {
   /// from outside the local file system (e.g. using [fromURL]).
   static Future deleteAllExternalFiles() async {
     try {
+
       String tempDirPath = (await getTemporaryDirectory()).path;
-      String dirPath = tempDirPath + _TEMP_DIR_NAME;
-      Directory dir = Directory(dirPath);
+      Directory dir = Directory(join(tempDirPath, _TEMP_DIR_NAME));
+
       if (dir.existsSync()) {
         dir.deleteSync(recursive: true);
       }
