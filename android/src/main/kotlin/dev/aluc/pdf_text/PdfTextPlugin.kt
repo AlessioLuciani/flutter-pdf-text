@@ -44,26 +44,26 @@ class PdfTextPlugin: FlutterPlugin, MethodCallHandler {
     }
   }
 
-  @Suppress("UNCHECKED_CAST")
   override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
     thread (start = true) {
       when (call.method) {
           "initDoc" -> {
-            val args = call.arguments as Map<String, Any>
+            val args = call.arguments as Map<*, *>
             val path = args["path"] as String
             val password = args["password"] as String
             initDoc(result, path, password)
           }
           "getDocPageText" -> {
-            val args = call.arguments as Map<String, Any>
+            val args = call.arguments as Map<*, *>
             val path = args["path"] as String
             val pageNumber = args["number"] as Int
             val password = args["password"] as String
             getDocPageText(result, path, pageNumber, password)
           }
           "getDocText" -> {
-            val args = call.arguments as Map<String, Any>
+            val args = call.arguments as Map<*, *>
             val path = args["path"] as String
+            @Suppress("UNCHECKED_CAST")
             val missingPagesNumbers = args["missingPagesNumbers"] as List<Int>
             val password = args["password"] as String
             getDocText(result, path, missingPagesNumbers, password)

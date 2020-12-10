@@ -1,4 +1,4 @@
-@Skip('To run these tests, make sure an emulator or a real device is connected, then \'cd example\' and : \'flutter test/pfd_text_test.dart\'')
+@Skip('To run these tests, make sure an emulator or a real device is connected, then \'cd example\' and : \'flutter run test/pfd_text_test.dart\'')
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
