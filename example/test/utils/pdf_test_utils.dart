@@ -6,7 +6,6 @@ import 'package:optional/optional.dart';
 import 'package:path/path.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:pdf_text/pdf_text.dart';
 import 'package:uuid/uuid.dart';
 
 import 'test_doc_info.dart';
@@ -53,5 +52,5 @@ bool get isIos => defaultTargetPlatform == TargetPlatform.iOS;
 
 /// A trick to wait till all awaits defined inside tester function get their
 /// results so the checks are finished. (avoiding awkward expectAsync calls)
-Future<void> forEach(List<PDFDoc> docs, Future<void> tester(PDFDoc doc)) =>
-    Future.wait(docs.map((doc) => tester(doc)));
+Future<void> forEach<T>(List<T> docs, Future<void> tester(T e)) =>
+    Future.wait(docs.map((e) => tester(e)));

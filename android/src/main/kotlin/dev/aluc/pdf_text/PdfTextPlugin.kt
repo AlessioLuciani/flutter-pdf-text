@@ -58,13 +58,15 @@ class PdfTextPlugin: FlutterPlugin, MethodCallHandler {
             val args = call.arguments as Map<String, Any>
             val path = args["path"] as String
             val pageNumber = args["number"] as Int
-            getDocPageText(result, path, pageNumber)
+            val password = args["password"] as String
+            getDocPageText(result, path, pageNumber, password)
           }
           "getDocText" -> {
             val args = call.arguments as Map<String, Any>
             val path = args["path"] as String
             val missingPagesNumbers = args["missingPagesNumbers"] as List<Int>
-            getDocText(result, path, missingPagesNumbers)
+            val password = args["password"] as String
+            getDocText(result, path, missingPagesNumbers, password)
           }
           else -> {
             Handler(Looper.getMainLooper()).post {
@@ -133,8 +135,8 @@ class PdfTextPlugin: FlutterPlugin, MethodCallHandler {
   /**
     Gets the text  of a document page, given its number.
    */
-  private fun getDocPageText(result: Result, path: String, pageNumber: Int) {
-    getDoc(result, path)?.use { doc ->
+  private fun getDocPageText(result: Result, path: String, pageNumber: Int, password: String) {
+    getDoc(result, path, password)?.use { doc ->
       val stripper = PDFTextStripper();
       stripper.startPage = pageNumber
       stripper.endPage = pageNumber
@@ -149,8 +151,8 @@ class PdfTextPlugin: FlutterPlugin, MethodCallHandler {
   Gets the text of the entire document.
   In order to improve the performance, it only retrieves the pages that are currently missing.
    */
-  private fun getDocText(result: Result, path: String, missingPagesNumbers: List<Int>) {
-    getDoc(result, path)?.use { doc ->
+  private fun getDocText(result: Result, path: String, missingPagesNumbers: List<Int>, password: String) {
+    getDoc(result, path, password)?.use { doc ->
       val missingPagesTexts = arrayListOf<String>()
       val stripper = PDFTextStripper();
       missingPagesNumbers.forEach {

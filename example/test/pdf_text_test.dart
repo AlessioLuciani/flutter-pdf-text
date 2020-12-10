@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -15,15 +16,15 @@ import 'utils/text_matcher.dart';
 import 'package:http/testing.dart';
 import 'package:http/http.dart';
 
-///TODO Write tests for password protected pdf's
 void main() async {
 
   TestWidgetsFlutterBinding.ensureInitialized();
 
   final testDirectoryPath = join((await getTemporaryDirectory()).path, "temp_pdf_text_dir");
   final PdfTestUtils pdfUtils = PdfTestUtils(testDirectoryPath);
+  final File encryptedPdf = File(join(testDirectoryPath, "encrypted.pdf"));
 
-  setUpAll(() {
+  setUpAll(() async {
     /// init mock http client so that the PDFDoc.fromUrl() obtains the mocked version
     ClientProvider(client: MockClient(
       (Request req) => Future.value(
@@ -34,6 +35,10 @@ void main() async {
       )
     ));
     Directory(testDirectoryPath).createSync();
+
+    /// Copy the content of encrypted.pdf to the test directory
+    final byteData = await rootBundle.load('test/resources/encrypted.pdf');
+    encryptedPdf.writeAsBytesSync(byteData.buffer.asUint8List());
   });
 
   tearDownAll(() {
@@ -46,7 +51,7 @@ void main() async {
 
   group("PDFDoc.from[File, Path, Url]", () {
 
-    test("should read full content from a single-page pdf document", () async {
+    test("should read text from a single-page pdf document", () async {
 
       final info = TestDocInfo(
         title : "Summa Theologiae",
@@ -82,7 +87,7 @@ void main() async {
       expect(pdf.existsSync(), false);
     });
 
-    test("should read full content from a multi-page pdf document", () async {
+    test("should read text from a multi-page pdf document", () async {
 
       final info = TestDocInfo(
         title : "Sherlock Holmes series",
@@ -115,14 +120,64 @@ void main() async {
 
       await forEach([fromFile, fromPath, fromUrl], (doc) async {
         expect(doc.pages.length, 2);
-        expect(await doc.pages[0].text, textMatches(page1));
-        expect(await doc.pages[1].text, textMatches(page2));
+        expect(await doc.pageAt(1).text, textMatches(page1));
+        expect(await doc.pageAt(2).text, textMatches(page2));
         expect(TestDocInfo.fromPDFDocInfo(doc.info), infoMatches(info));
         expect(await doc.text, textMatches([...page1, ...page2]));
       });
 
       fromFile.deleteFile();
       expect(pdf.existsSync(), false);
+    });
+
+    test("should read text from a password protected pdf file", isIos ? () {
+      debugPrint("*** Reading of password protected pdf documents does not seem to work in the iOS implementation of the plugin ***");
+    } : () async {
+
+      expect(encryptedPdf.existsSync(), true);
+
+      PDFDoc fromFile = await PDFDoc.fromFile(encryptedPdf, password: "password");
+      PDFDoc fromPath = await PDFDoc.fromPath(encryptedPdf.path, password: "password");
+      PDFDoc fromUrl = await PDFDoc.fromURL(
+        "http://localhost/${basename(encryptedPdf.path)}", password: "password"
+      );
+
+      final expectedContent = "Hello World! (from an encrypted pdf document)";
+
+      await forEach([fromFile, fromPath, fromUrl], (doc) async {
+        expect(await doc.pageAt(1).text, textMatches([expectedContent]));
+        expect(await doc.text, textMatches([expectedContent]));
+      });
+
+    });
+
+    test("should fail if the password is invalid", () async {
+
+      expect(encryptedPdf.existsSync(), true);
+
+      int exceptionCount = 0;
+
+      final fromFile = () => PDFDoc.fromFile(encryptedPdf, password: "invalid-password");
+      final fromPath = () => PDFDoc.fromPath(encryptedPdf.path, password: "invalid-password");
+      final fromURL = () => PDFDoc.fromURL(
+          "http://localhost/${basename(encryptedPdf.path)}", password: "invalid-password"
+      );
+
+      await forEach([fromFile, fromPath, fromURL], (foo) async {
+        try {
+          await foo();
+        } on PlatformException catch (e) {
+          expect(e.message, contains(
+           isIos ? "The password is invalid" : "File path or password (in case of encrypted document) is invalid"
+          ));
+          exceptionCount++;
+        } catch (e) {
+          fail("should not get here!");
+        }
+      });
+
+      expect(exceptionCount, 3, reason: "All attempts with invalid password must fail!");
+
     });
   });
 }

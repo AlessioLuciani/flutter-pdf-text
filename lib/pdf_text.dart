@@ -16,6 +16,7 @@ class PDFDoc {
   File _file;
   PDFDocInfo _info;
   List<PDFPage> _pages;
+  String _password;
 
   PDFDoc._internal();
 
@@ -29,6 +30,7 @@ class PDFDoc {
   static Future<PDFDoc> fromFile(File file,
       {String password = "", bool fastInit = false}) async {
     var doc = PDFDoc._internal();
+    doc._password = password;
     doc._file = file;
     Map data;
     try {
@@ -113,7 +115,8 @@ class PDFDoc {
     try {
       missingPagesTexts = List<String>.from(await _CHANNEL.invokeMethod(
           'getDocText',
-          {"path": _file.path, "missingPagesNumbers": missingPagesNumbers}));
+          {"path": _file.path, "missingPagesNumbers": missingPagesNumbers,
+           "password": _password}));
     } on Exception catch (e) {
       return Future.error(e);
     }
@@ -175,7 +178,8 @@ class PDFPage {
     if (_text == null) {
       try {
         _text = await _CHANNEL.invokeMethod('getDocPageText',
-            {"path": _parentDoc._file.path, "number": number});
+            {"path": _parentDoc._file.path, "number": number,
+             "password": _parentDoc._password});
       } on Exception catch (e) {
         return Future.error(e);
       }
