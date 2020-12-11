@@ -19,9 +19,8 @@ import kotlin.concurrent.thread
 /** PdfTextPlugin */
 class PdfTextPlugin: FlutterPlugin, MethodCallHandler {
 
-  @Suppress("DEPRECATION")
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-    val channel = MethodChannel(flutterPluginBinding.flutterEngine.dartExecutor, "pdf_text")
+    val channel = MethodChannel(flutterPluginBinding.binaryMessenger, "pdf_text")
     channel.setMethodCallHandler(PdfTextPlugin())
     PDFBoxResourceLoader.init(flutterPluginBinding.applicationContext)
   }
