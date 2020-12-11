@@ -1,3 +1,9 @@
+## 0.4.0
+
+* The PDFBoxResourceLoader is now used on Android to load PDF documents much faster than before. The fast initialization (i.e. *fastInit*) option has therefore been removed.
+* PDF documents are no longer kept alive in the platform-specific scope. Instead, they are opened and closed at each read with the respective library functions. This does not affect the caching mechanism utilized directly in Dart. This change prevents errors due to multiple document accesses at the same time.
+* Tests have been implemented.
+
 ## 0.3.1
 
 * The possibility to initialize a document faster (without immediately initializing the text stripper engine) on Android has been added.
