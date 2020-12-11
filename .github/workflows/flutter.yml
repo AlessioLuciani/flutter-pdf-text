@@ -10,6 +10,8 @@ jobs:
   build:
 
     runs-on: macos-latest #ubuntu-latest
+    env:
+      working-directory: ./example
 
     steps:
     - uses: actions/checkout@v2
@@ -19,8 +21,10 @@ jobs:
     - uses: subosito/flutter-action@v1
       with:
         channel: 'beta' # or: 'dev' or 'stable'
-    - run: cd example
     - run: flutter pub get
+      working-directory: ${{env.working-directory}}
   #  - run: flutter test
     - run: flutter build appbundle #apk
+      working-directory: ${{env.working-directory}}
     - run: flutter build ios --release --no-codesign
+      working-directory: ${{env.working-directory}}
