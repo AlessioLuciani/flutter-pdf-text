@@ -1,4 +1,5 @@
-@Skip('To run these tests, make sure an emulator or a real device is connected, then \'cd example\' and : \'flutter run test/pfd_text_test.dart\'')
+@Skip(
+    'To run these tests, make sure an emulator or a real device is connected, then \'cd example\' and : \'flutter run test/pfd_text_test.dart\'')
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -17,23 +18,20 @@ import 'package:http/testing.dart';
 import 'package:http/http.dart';
 
 void main() async {
-
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  final testDirectoryPath = join((await getTemporaryDirectory()).path, "temp_pdf_text_dir");
+  final testDirectoryPath =
+      join((await getTemporaryDirectory()).path, "temp_pdf_text_dir");
   final PdfTestUtils pdfUtils = PdfTestUtils(testDirectoryPath);
   final File encryptedPdf = File(join(testDirectoryPath, "encrypted.pdf"));
 
   setUpAll(() async {
     /// init mock http client so that the PDFDoc.fromUrl() obtains the mocked version
-    ClientProvider(client: MockClient(
-      (Request req) => Future.value(
-        Response.bytes(
-          File(join(testDirectoryPath, req.url.path.split("/").last)).readAsBytesSync(),
-          200
-        )
-      )
-    ));
+    ClientProvider(
+        client: MockClient((Request req) => Future.value(Response.bytes(
+            File(join(testDirectoryPath, req.url.path.split("/").last))
+                .readAsBytesSync(),
+            200))));
     Directory(testDirectoryPath).createSync();
 
     /// Copy the content of encrypted.pdf to the test directory
@@ -45,21 +43,19 @@ void main() async {
     try {
       Directory(testDirectoryPath).deleteSync(recursive: true);
     } catch (e) {
-      debugPrint("Exception while attempting to delete test directory (no big deal) : $e");
+      debugPrint(
+          "Exception while attempting to delete test directory (no big deal) : $e");
     }
   });
 
   group("PDFDoc.from[File, Path, Url]", () {
-
     test("should read text from a single-page pdf document", () async {
-
       final info = TestDocInfo(
-        title : "Summa Theologiae",
-        author: "St Thomas Aquinas",
-        creator: "PDF Creator",
-        subject: "The most profound theological book ever written",
-        keywords: "Doctor,Angelicus"
-      );
+          title: "Summa Theologiae",
+          author: "St Thomas Aquinas",
+          creator: "PDF Creator",
+          subject: "The most profound theological book ever written",
+          keywords: "Doctor,Angelicus");
 
       List<String> page = [
         "Et ut intentio nostra sub aliquibus certis limitibus comprehendatur,",
@@ -74,7 +70,8 @@ void main() async {
 
       PDFDoc fromFile = await PDFDoc.fromFile(pdf);
       PDFDoc fromPath = await PDFDoc.fromPath(pdf.path);
-      PDFDoc fromUrl = await PDFDoc.fromURL("http://localhost/${basename(pdf.path)}");
+      PDFDoc fromUrl =
+          await PDFDoc.fromURL("http://localhost/${basename(pdf.path)}");
 
       await forEach([fromFile, fromPath, fromUrl], (doc) async {
         expect(await doc.text, textMatches(page));
@@ -88,14 +85,12 @@ void main() async {
     });
 
     test("should read text from a multi-page pdf document", () async {
-
       final info = TestDocInfo(
-        title : "Sherlock Holmes series",
-        author: "Sr Arthur Conan Doyle",
-        creator: "PDF Creator",
-        subject: "Detecitve stories",
-        keywords: "Holmes,Watson"
-      );
+          title: "Sherlock Holmes series",
+          author: "Sr Arthur Conan Doyle",
+          creator: "PDF Creator",
+          subject: "Detecitve stories",
+          keywords: "Holmes,Watson");
 
       List<String> page1 = [
         "To Sherlock Holmes she is always the woman.",
@@ -110,13 +105,12 @@ void main() async {
         "was to introduce a distracting factor which might throw a",
       ];
 
-      File pdf = await pdfUtils.createPdfFile(
-        [page1, page2], info : info
-      );
+      File pdf = await pdfUtils.createPdfFile([page1, page2], info: info);
 
       PDFDoc fromFile = await PDFDoc.fromFile(pdf);
       PDFDoc fromPath = await PDFDoc.fromPath(pdf.path);
-      PDFDoc fromUrl = await PDFDoc.fromURL("http://localhost/${basename(pdf.path)}");
+      PDFDoc fromUrl =
+          await PDFDoc.fromURL("http://localhost/${basename(pdf.path)}");
 
       await forEach([fromFile, fromPath, fromUrl], (doc) async {
         expect(doc.pages.length, 2);
@@ -130,17 +124,16 @@ void main() async {
       expect(pdf.existsSync(), false);
     });
 
-    test("should read text from a password protected pdf file", isIos ? () {
-      debugPrint("*** Reading of password protected pdf documents does not seem to work in the iOS implementation of the plugin ***");
-    } : () async {
-
+    test("should read text from a password protected pdf file", () async {
       expect(encryptedPdf.existsSync(), true);
 
-      PDFDoc fromFile = await PDFDoc.fromFile(encryptedPdf, password: "password");
-      PDFDoc fromPath = await PDFDoc.fromPath(encryptedPdf.path, password: "password");
+      PDFDoc fromFile =
+          await PDFDoc.fromFile(encryptedPdf, password: "password");
+      PDFDoc fromPath =
+          await PDFDoc.fromPath(encryptedPdf.path, password: "password");
       PDFDoc fromUrl = await PDFDoc.fromURL(
-        "http://localhost/${basename(encryptedPdf.path)}", password: "password"
-      );
+          "http://localhost/${basename(encryptedPdf.path)}",
+          password: "password");
 
       final expectedContent = "Hello World! (from an encrypted pdf document)";
 
@@ -148,36 +141,38 @@ void main() async {
         expect(await doc.pageAt(1).text, textMatches([expectedContent]));
         expect(await doc.text, textMatches([expectedContent]));
       });
-
     });
 
     test("should fail if the password is invalid", () async {
-
       expect(encryptedPdf.existsSync(), true);
 
       int exceptionCount = 0;
 
-      final fromFile = () => PDFDoc.fromFile(encryptedPdf, password: "invalid-password");
-      final fromPath = () => PDFDoc.fromPath(encryptedPdf.path, password: "invalid-password");
+      final fromFile =
+          () => PDFDoc.fromFile(encryptedPdf, password: "invalid-password");
+      final fromPath = () =>
+          PDFDoc.fromPath(encryptedPdf.path, password: "invalid-password");
       final fromURL = () => PDFDoc.fromURL(
-          "http://localhost/${basename(encryptedPdf.path)}", password: "invalid-password"
-      );
+          "http://localhost/${basename(encryptedPdf.path)}",
+          password: "invalid-password");
 
       await forEach([fromFile, fromPath, fromURL], (foo) async {
         try {
           await foo();
         } on PlatformException catch (e) {
-          expect(e.message, contains(
-           isIos ? "The password is invalid" : "File path or password (in case of encrypted document) is invalid"
-          ));
+          expect(
+              e.message,
+              contains(isIos
+                  ? "The password is invalid"
+                  : "File path or password (in case of encrypted document) is invalid"));
           exceptionCount++;
         } catch (e) {
           fail("should not get here!");
         }
       });
 
-      expect(exceptionCount, 3, reason: "All attempts with invalid password must fail!");
-
+      expect(exceptionCount, 3,
+          reason: "All attempts with invalid password must fail!");
     });
   });
 }

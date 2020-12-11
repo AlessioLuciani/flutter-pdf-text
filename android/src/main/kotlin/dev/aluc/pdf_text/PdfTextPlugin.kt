@@ -107,7 +107,7 @@ class PdfTextPlugin: FlutterPlugin, MethodCallHandler {
                       "title" to info.title, "subject" to info.subject
               )
       )
-
+      doc.close()
       Handler(Looper.getMainLooper()).post {
         result.success(data)
       }
@@ -140,6 +140,7 @@ class PdfTextPlugin: FlutterPlugin, MethodCallHandler {
       stripper.startPage = pageNumber
       stripper.endPage = pageNumber
       val text = stripper.getText(doc)
+      doc.close()
       Handler(Looper.getMainLooper()).post {
         result.success(text)
       }
@@ -159,6 +160,7 @@ class PdfTextPlugin: FlutterPlugin, MethodCallHandler {
         stripper.endPage = it
         missingPagesTexts.add(stripper.getText(doc))
       }
+      doc.close()
       Handler(Looper.getMainLooper()).post {
         result.success(missingPagesTexts)
       }
@@ -167,7 +169,6 @@ class PdfTextPlugin: FlutterPlugin, MethodCallHandler {
 
   /**
   Gets a PDF document, given its path.
-  Initializes the text stripper engine if initTextStripper is true.
    */
   private fun getDoc(result: Result, path: String, password: String = ""): PDDocument? {
     return try {

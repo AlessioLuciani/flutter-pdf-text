@@ -22,20 +22,14 @@ class PDFDoc {
 
   /// Creates a [PDFDoc] object with a [File] instance.
   /// Optionally, takes a [password] for encrypted PDF documents.
-  /// If [fastInit] is true, the initialization of the document will
-  /// be faster on Android. In that case, the text stripper engine
-  /// will not be initialized with this call, but later when some text
-  /// is read. This means that the first text read will take some time
-  /// but the document data can be accessed immediately.
-  static Future<PDFDoc> fromFile(File file,
-      {String password = "", bool fastInit = false}) async {
+  static Future<PDFDoc> fromFile(File file, {String password = ""}) async {
     var doc = PDFDoc._internal();
     doc._password = password;
     doc._file = file;
     Map data;
     try {
-      data = await _CHANNEL.invokeMethod('initDoc',
-          {"path": file.path, "password": password, "fastInit": fastInit});
+      data = await _CHANNEL
+          .invokeMethod('initDoc', {"path": file.path, "password": password});
     } on Exception catch (e) {
       return Future.error(e);
     }
@@ -49,27 +43,15 @@ class PDFDoc {
 
   /// Creates a [PDFDoc] object with a file path.
   /// Optionally, takes a [password] for encrypted PDF documents.
-  /// If [fastInit] is true, the initialization of the document will
-  /// be faster on Android. In that case, the text stripper engine
-  /// will not be initialized with this call, but later when some text
-  /// is read. This means that the first text read will take some time
-  /// but the document data can be accessed immediately.
-  static Future<PDFDoc> fromPath(String path,
-      {String password = "", bool fastInit = false}) async {
-    return await fromFile(File(path), password: password, fastInit: fastInit);
+  static Future<PDFDoc> fromPath(String path, {String password = ""}) async {
+    return await fromFile(File(path), password: password);
   }
 
   /// Creates a [PDFDoc] object with a URL.
   /// Optionally, takes a [password] for encrypted PDF documents.
-  /// If [fastInit] is true, the initialization of the document will
-  /// be faster on Android. In that case, the text stripper engine
-  /// will not be initialized with this call, but later when some text
-  /// is read. This means that the first text read will take some time
-  /// but the document data can be accessed immediately.
   /// It downloads the PDF file located in the given URL and saves it
   /// in the app's temporary directory.
-  static Future<PDFDoc> fromURL(String url,
-      {String password = "", bool fastInit = false}) async {
+  static Future<PDFDoc> fromURL(String url, {String password = ""}) async {
     File file;
     try {
       String tempDirPath = (await getTemporaryDirectory()).path;
@@ -83,7 +65,7 @@ class PDFDoc {
     } on Exception catch (e) {
       return Future.error(e);
     }
-    return await fromFile(file, password: password, fastInit: fastInit);
+    return await fromFile(file, password: password);
   }
 
   /// Gets the page of the document at the given page number.
@@ -111,19 +93,25 @@ class PDFDoc {
         missingPagesNumbers.add(page.number);
       }
     });
-    List<String> missingPagesTexts;
-    try {
-      missingPagesTexts = List<String>.from(await _CHANNEL.invokeMethod(
-          'getDocText',
-          {"path": _file.path, "missingPagesNumbers": missingPagesNumbers,
-           "password": _password}));
-    } on Exception catch (e) {
-      return Future.error(e);
+    List<String> missingPagesTexts = List();
+    // Reading missing pages, if any exists
+    if (missingPagesNumbers.isNotEmpty) {
+      try {
+        missingPagesTexts =
+            List<String>.from(await _CHANNEL.invokeMethod('getDocText', {
+          "path": _file.path,
+          "missingPagesNumbers": missingPagesNumbers,
+          "password": _password
+        }));
+      } on Exception catch (e) {
+        return Future.error(e);
+      }
     }
     // Populating missing pages
     for (var i = 0; i < missingPagesNumbers.length; i++) {
       pageAt(missingPagesNumbers[i])._text = missingPagesTexts[i];
     }
+
     /// Removed the \n added at the end of each page here (potentially a breaking change!).
     /// Since every page can be retrieved individually, the client knows exactly
     /// where it begins and where it ends, therefore there is no benefit of
@@ -144,7 +132,6 @@ class PDFDoc {
   /// from outside the local file system (e.g. using [fromURL]).
   static Future deleteAllExternalFiles() async {
     try {
-
       String tempDirPath = (await getTemporaryDirectory()).path;
       Directory dir = Directory(join(tempDirPath, _TEMP_DIR_NAME));
 
@@ -177,9 +164,11 @@ class PDFPage {
     // Loading the text
     if (_text == null) {
       try {
-        _text = await _CHANNEL.invokeMethod('getDocPageText',
-            {"path": _parentDoc._file.path, "number": number,
-             "password": _parentDoc._password});
+        _text = await _CHANNEL.invokeMethod('getDocPageText', {
+          "path": _parentDoc._file.path,
+          "number": number,
+          "password": _parentDoc._password
+        });
       } on Exception catch (e) {
         return Future.error(e);
       }

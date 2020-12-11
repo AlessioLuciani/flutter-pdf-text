@@ -5,12 +5,6 @@ import PDFKit
 
 public class SwiftPdfTextPlugin: NSObject, FlutterPlugin {
     
-    /**
-     * PDF document cached from the previous use.
-     */
-    private var cachedDoc: PDFDocument? = nil
-    private var cachedDocPath: String? = nil
-    
   public static func register(with registrar: FlutterPluginRegistrar) {
     let channel = FlutterMethodChannel(name: "pdf_text", binaryMessenger: registrar.messenger())
     let instance = SwiftPdfTextPlugin()
@@ -28,14 +22,16 @@ public class SwiftPdfTextPlugin: NSObject, FlutterPlugin {
         } else if call.method == "getDocPageText" {
               let args = call.arguments as! NSDictionary
               let path = args["path"] as! String
+              let password = args["password"] as! String
               let pageNumber = args["number"] as! Int
-            self.getDocPageText(result: result, path: path, pageNumber: pageNumber)
+            self.getDocPageText(result: result, path: path, password: password, pageNumber: pageNumber)
         }
            else if call.method == "getDocText" {
               let args = call.arguments as! NSDictionary
               let path = args["path"] as! String
+              let password = args["password"] as! String
               let missingPagesNumbers = args["missingPagesNumbers"] as! [Int]
-            self.getDocText(result: result, path: path, missingPagesNumbers: missingPagesNumbers)
+            self.getDocText(result: result, path: path, password: password, missingPagesNumbers: missingPagesNumbers)
         }
           else {
             DispatchQueue.main.sync {
@@ -45,7 +41,6 @@ public class SwiftPdfTextPlugin: NSObject, FlutterPlugin {
         }
     }
   }
-    
     
 
   /**
@@ -85,8 +80,9 @@ public class SwiftPdfTextPlugin: NSObject, FlutterPlugin {
     /**
             Gets the text  of a document page, given its number.
      */
-    private func getDocPageText(result: FlutterResult, path: String, pageNumber: Int) {
-      let doc = getDoc(result: result, path: path)
+    private func getDocPageText(result: FlutterResult, path: String,
+                                password: String, pageNumber: Int) {
+      let doc = getDoc(result: result, path: path, password: password)
         if doc == nil {
             return
         }
@@ -100,8 +96,9 @@ public class SwiftPdfTextPlugin: NSObject, FlutterPlugin {
             Gets the text of the entire document.
             In order to improve the performance, it only retrieves the pages that are currently missing.
      */
-    private func getDocText(result: FlutterResult, path: String, missingPagesNumbers: [Int]) {
-      let doc = getDoc(result: result, path: path)
+    private func getDocText(result: FlutterResult, path: String,
+                            password: String, missingPagesNumbers: [Int]) {
+      let doc = getDoc(result: result, path: path, password: password)
         if doc == nil {
             return
         }
@@ -118,10 +115,6 @@ public class SwiftPdfTextPlugin: NSObject, FlutterPlugin {
            Gets a PDF document, given its path.
     */
     private func getDoc(result: FlutterResult, path: String, password: String = "") -> PDFDocument? {
-        // Checking for cached document
-       if cachedDoc != nil && cachedDocPath == path {
-         return cachedDoc
-       }
         let doc = PDFDocument(url: URL(fileURLWithPath: path))
         if doc == nil {
             DispatchQueue.main.sync {
@@ -139,8 +132,6 @@ public class SwiftPdfTextPlugin: NSObject, FlutterPlugin {
             }
             return nil
         }
-        cachedDoc = doc
-        cachedDocPath = path
         return doc
     }
     

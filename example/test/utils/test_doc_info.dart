@@ -1,7 +1,6 @@
 import 'package:pdf_text/pdf_text.dart';
 
 class TestDocInfo {
-
   final String title;
   final String author;
   final String creator;
@@ -26,8 +25,7 @@ class TestDocInfo {
       {this.title, this.author, this.creator, this.subject, this.keywords});
 
   TestDocInfo.fromPDFDocInfo(PDFDocInfo pdfDocInfo)
-      :
-        this.title = pdfDocInfo.title,
+      : this.title = pdfDocInfo.title,
         this.author = pdfDocInfo.author,
         this.creator = pdfDocInfo.creator,
         this.subject = pdfDocInfo.subject,
@@ -36,13 +34,13 @@ class TestDocInfo {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-          other is TestDocInfo &&
-              runtimeType == other.runtimeType &&
-              title == other.title &&
-              author == other.author &&
-              creator == other.creator &&
-              subject == other.subject &&
-              keywords == other.keywords;
+      other is TestDocInfo &&
+          runtimeType == other.runtimeType &&
+          title == other.title &&
+          author == other.author &&
+          creator == other.creator &&
+          subject == other.subject &&
+          keywords == other.keywords;
 
   @override
   int get hashCode =>
@@ -53,10 +51,9 @@ class TestDocInfo {
       keywords.hashCode;
 
   @override
-  String toString() =>
-      'DocInfo{title: $title, '
-          'author: $author, '
-          'creator: $creator, '
-          'subject: $subject, '
-          'keywords: $keywords}';
+  String toString() => 'DocInfo{title: $title, '
+      'author: $author, '
+      'creator: $creator, '
+      'subject: $subject, '
+      'keywords: $keywords}';
 }

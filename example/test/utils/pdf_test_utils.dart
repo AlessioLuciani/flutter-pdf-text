@@ -11,32 +11,31 @@ import 'package:uuid/uuid.dart';
 import 'test_doc_info.dart';
 
 class PdfTestUtils {
-
   final String testDirectoryPath;
 
   PdfTestUtils(this.testDirectoryPath);
 
   /// Creates a basic, single or multipage pdf document with optional info and
   /// saves it to a File that is subsequently returned wrapped in a Future
-  Future<File> createPdfFile(List<List<String>> pages, {TestDocInfo info}) async {
+  Future<File> createPdfFile(List<List<String>> pages,
+      {TestDocInfo info}) async {
+    final pdf = Optional.ofNullable(info)
+        .map((i) => pw.Document(
+            title: i.title,
+            author: i.author,
+            creator: i.creator,
+            subject: i.subject,
+            keywords: i.keywords))
+        .orElse(pw.Document());
 
-    final pdf = Optional.ofNullable(info).map(
-            (i) => pw.Document(
-                title: i.title,
-                author: i.author,
-                creator: i.creator,
-                subject: i.subject,
-                keywords: i.keywords)
-    ).orElse(pw.Document());
+    final pdfPages = pages
+        .map((page) => pw.MultiPage(
 
-    final pdfPages = pages.map((page) => pw.MultiPage(
-       /// a3 format so long lines will hopefully not be broken
-        pageFormat: PdfPageFormat.a3,
-        build: (pw.Context context) =>
-          page.map((line) =>
-            pw.Paragraph(text: line)
-          ).toList()
-        )).toList();
+            /// a3 format so long lines will hopefully not be broken
+            pageFormat: PdfPageFormat.a3,
+            build: (pw.Context context) =>
+                page.map((line) => pw.Paragraph(text: line)).toList()))
+        .toList();
     pdfPages.forEach((page) {
       pdf.addPage(page);
     });
