@@ -10,8 +10,8 @@ const MethodChannel _CHANNEL = const MethodChannel('pdf_text');
 const String _TEMP_DIR_NAME = ".flutter_pdf_text";
 
 /// Class representing a PDF document.
-/// In order to create a new [PDFDoc] instance, one of these two static methods has
-///  to be used: [PDFDoc.fromFile], [PDFDoc.fromPath].
+/// In order to create a new [PDFDoc] instance, one of these static methods has
+///  to be used: [PDFDoc.fromFile], [PDFDoc.fromPath], [PDFDoc.fromURL].
 class PDFDoc {
   File _file;
   PDFDocInfo _info;
