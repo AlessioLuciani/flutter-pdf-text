@@ -61,7 +61,8 @@ class PDFDoc {
 
       file = File(filePath);
       file.createSync(recursive: true);
-      file.writeAsBytesSync((await ClientProvider().client.get(url)).bodyBytes);
+      file.writeAsBytesSync(
+          (await ClientProvider().client.get(Uri.parse(url))).bodyBytes);
     } on Exception catch (e) {
       return Future.error(e);
     }
