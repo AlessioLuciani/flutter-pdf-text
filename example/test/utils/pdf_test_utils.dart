@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:optional/optional.dart';
@@ -18,14 +17,14 @@ class PdfTestUtils {
   /// Creates a basic, single or multipage pdf document with optional info and
   /// saves it to a File that is subsequently returned wrapped in a Future
   Future<File> createPdfFile(List<List<String>> pages,
-      {TestDocInfo info}) async {
+      {TestDocInfo? info}) async {
     final pdf = Optional.ofNullable(info)
         .map((i) => pw.Document(
-            title: i.title,
-            author: i.author,
-            creator: i.creator,
-            subject: i.subject,
-            keywords: i.keywords))
+            title: i.title!,
+            author: i.author!,
+            creator: i.creator!,
+            subject: i.subject!,
+            keywords: i.keywords!))
         .orElse(pw.Document());
 
     final pdfPages = pages
@@ -42,7 +41,8 @@ class PdfTestUtils {
 
     String testFile = join(testDirectoryPath, "${Uuid().v1()}.pdf");
     final file = File(testFile);
-    await file.writeAsBytes(pdf.save());
+
+    await file.writeAsBytes(await pdf.save());
     return file;
   }
 }
