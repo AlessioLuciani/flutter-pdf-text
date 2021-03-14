@@ -20,11 +20,11 @@ class PdfTestUtils {
       {TestDocInfo? info}) async {
     final pdf = Optional.ofNullable(info)
         .map((i) => pw.Document(
-            title: i.title!,
-            author: i.author!,
-            creator: i.creator!,
-            subject: i.subject!,
-            keywords: i.keywords!))
+            title: i.title,
+            author: i.author,
+            creator: i.creator,
+            subject: i.subject,
+            keywords: i.keywords))
         .orElse(pw.Document());
 
     final pdfPages = pages
