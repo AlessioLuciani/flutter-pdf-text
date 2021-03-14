@@ -14,7 +14,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   PDFDoc? _pdfDoc;
-  String? _text = "";
+  String _text = "";
 
   bool _buttonsEnabled = true;
 
@@ -35,32 +35,35 @@ class _MyAppState extends State<MyApp> {
             padding: EdgeInsets.all(10),
             child: ListView(
               children: <Widget>[
-                FlatButton(
+                TextButton(
                   child: Text(
                     "Pick PDF document",
                     style: TextStyle(color: Colors.white),
                   ),
-                  color: Colors.blueAccent,
+                  style: TextButton.styleFrom(
+                      padding: EdgeInsets.all(5),
+                      backgroundColor: Colors.blueAccent),
                   onPressed: _pickPDFText,
-                  padding: EdgeInsets.all(5),
                 ),
-                FlatButton(
+                TextButton(
                   child: Text(
                     "Read random page",
                     style: TextStyle(color: Colors.white),
                   ),
-                  color: Colors.blueAccent,
+                  style: TextButton.styleFrom(
+                      padding: EdgeInsets.all(5),
+                      backgroundColor: Colors.blueAccent),
                   onPressed: _buttonsEnabled ? _readRandomPage : () {},
-                  padding: EdgeInsets.all(5),
                 ),
-                FlatButton(
+                TextButton(
                   child: Text(
                     "Read whole document",
                     style: TextStyle(color: Colors.white),
                   ),
-                  color: Colors.blueAccent,
+                  style: TextButton.styleFrom(
+                      padding: EdgeInsets.all(5),
+                      backgroundColor: Colors.blueAccent),
                   onPressed: _buttonsEnabled ? _readWholeDoc : () {},
-                  padding: EdgeInsets.all(5),
                 ),
                 Padding(
                   child: Text(
@@ -80,7 +83,7 @@ class _MyAppState extends State<MyApp> {
                   ),
                   padding: EdgeInsets.all(15),
                 ),
-                Text(_text!),
+                Text(_text),
               ],
             ),
           )),
@@ -105,7 +108,7 @@ class _MyAppState extends State<MyApp> {
       _buttonsEnabled = false;
     });
 
-    String? text =
+    String text =
         await _pdfDoc!.pageAt(Random().nextInt(_pdfDoc!.length) + 1).text;
 
     setState(() {

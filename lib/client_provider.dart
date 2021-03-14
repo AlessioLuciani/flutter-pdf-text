@@ -1,7 +1,7 @@
 import 'package:http/http.dart' show Client;
 
 class ClientProvider {
-  final Client  _client;
+  final Client _client;
   static ClientProvider? _instance;
 
   /// defaults to the standard dart http client
@@ -10,5 +10,5 @@ class ClientProvider {
   factory ClientProvider({Client? client}) =>
       _instance ?? (_instance = ClientProvider._create(client));
 
-  Client  get client => _client;
+  Client get client => _client;
 }
