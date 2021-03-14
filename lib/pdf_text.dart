@@ -14,9 +14,9 @@ const String _TEMP_DIR_NAME = ".flutter_pdf_text";
 ///  to be used: [PDFDoc.fromFile], [PDFDoc.fromPath], [PDFDoc.fromURL].
 class PDFDoc {
   late File _file;
-  PDFDocInfo? _info;
-  List<PDFPage>? _pages;
-  String? _password;
+  late PDFDocInfo _info;
+  late List<PDFPage> _pages;
+  late String _password;
 
   PDFDoc._internal();
 
@@ -26,18 +26,14 @@ class PDFDoc {
     var doc = PDFDoc._internal();
     doc._password = password;
     doc._file = file;
-    Map? data;
+    late Map data;
     try {
       data = await _CHANNEL
           .invokeMethod('initDoc', {"path": file.path, "password": password});
     } on Exception catch (e) {
       return Future.error(e);
     }
-    doc._pages =
-        List.generate(data!["length"], (index) => PDFPage._fromDoc(doc, index));
-    // for (int  i = 0; i < data!["length"]; i++) {
-    //   doc._pages!.add(PDFPage._fromDoc(doc, i));
-    // }
+    doc._pages = List.generate(data["length"], (i) => PDFPage._fromDoc(doc, i));
     doc._info = PDFDocInfo._fromMap(data["info"]);
     return doc;
   }
@@ -71,27 +67,27 @@ class PDFDoc {
   }
 
   /// Gets the page of the document at the given page number.
-  PDFPage pageAt(int pageNumber) => _pages![pageNumber - 1];
+  PDFPage pageAt(int pageNumber) => _pages[pageNumber - 1];
 
   /// Gets the pages of this document.
   /// The pages indexes start at 0, but the first page has number 1.
   /// Therefore, if you need to access the 5th page, you will do:
   /// var page = doc.pages[4]
   /// print(page.number) -> 5
-  List<PDFPage>? get pages => _pages;
+  List<PDFPage> get pages => _pages;
 
   /// Gets the number of pages of this document.
-  int get length => _pages!.length;
+  int get length => _pages.length;
 
   /// Gets the information of this document.
-  PDFDocInfo? get info => _info;
+  PDFDocInfo get info => _info;
 
   /// Gets the entire text content of the document.
   Future<String> get text async {
     // Collecting missing pages
 
     List<int> missingPagesNumbers = [];
-    _pages!.forEach((page) {
+    _pages.forEach((page) {
       if (page._text == null) {
         missingPagesNumbers.add(page.number);
       }
@@ -117,12 +113,8 @@ class PDFDoc {
       pageAt(missingPagesNumbers[i])._text = missingPagesTexts[i];
     }
 
-    /// Removed the \n added at the end of each page here (potentially a breaking change!).
-    /// Since every page can be retrieved individually, the client knows exactly
-    /// where it begins and where it ends, therefore there is no benefit of
-    /// introducing an artificial page separator that is not part of the pdf
-    /// document per se
-    return _pages!.fold<String>("", (pv, page) => "$pv${page._text}");
+    /// Returning the entire text, concatenating all pages
+    return _pages.fold<String>("", (pv, page) => "$pv${page._text}");
   }
 
   /// Deletes the file related to this [PDFDoc].
@@ -165,7 +157,7 @@ class PDFPage {
   /// Gets the text of this page.
   /// The text retrieval is lazy. So the text of a page is only loaded when
   /// it is requested for the first time.
-  Future<String?> get text async {
+  Future<String> get text async {
     // Loading the text
     if (_text == null) {
       try {
@@ -178,7 +170,7 @@ class PDFPage {
         return Future.error(e);
       }
     }
-    return _text;
+    return _text!;
   }
 
   /// Gets the page number.
