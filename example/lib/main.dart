@@ -89,10 +89,9 @@ class _MyAppState extends State<MyApp> {
 
   /// Picks a new PDF document from the device
   Future _pickPDFText() async {
-    // File file = await FilePicker.getFile();
-    FilePickerResult? file = await FilePicker.platform.pickFiles();
-    if (file?.files.first != null) {
-      _pdfDoc = await PDFDoc.fromPath(file!.paths.first!);
+    var filePickerResult = await FilePicker.platform.pickFiles();
+    if (filePickerResult != null) {
+      _pdfDoc = await PDFDoc.fromPath(filePickerResult.files.single.path!);
       setState(() {});
     }
   }

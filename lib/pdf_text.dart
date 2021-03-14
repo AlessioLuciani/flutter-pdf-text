@@ -63,7 +63,7 @@ class PDFDoc {
       file = File(filePath);
       file.createSync(recursive: true);
       file.writeAsBytesSync(
-          (await ClientProvider().client.get(Uri(path: url))).bodyBytes);
+          (await ClientProvider().client.get(Uri.parse(url))).bodyBytes);
     } on Exception catch (e) {
       return Future.error(e);
     }
@@ -90,13 +90,7 @@ class PDFDoc {
   Future<String> get text async {
     // Collecting missing pages
 
-    List<int?> missingPagesNumbers = List.generate(_pages!.length, (i) {
-      String? k = _pages![i]._text;
-      if (k != null) {
-        return _pages![i].number;
-      }
-    });
-
+    List<int> missingPagesNumbers = [];
     _pages!.forEach((page) {
       if (page._text == null) {
         missingPagesNumbers.add(page.number);
@@ -112,7 +106,7 @@ class PDFDoc {
           "path": _file.path,
           "missingPagesNumbers": missingPagesNumbers,
           "password": _password
-        }) as FutureOr<Iterable<dynamic>>));
+        })));
       } on Exception catch (e) {
         return Future.error(e);
       }
@@ -120,7 +114,7 @@ class PDFDoc {
     // Populating missing pages
 
     for (var i = 0; i < missingPagesNumbers.length; i++) {
-      pageAt(missingPagesNumbers[i]!)._text = missingPagesTexts[i];
+      pageAt(missingPagesNumbers[i])._text = missingPagesTexts[i];
     }
 
     /// Removed the \n added at the end of each page here (potentially a breaking change!).
