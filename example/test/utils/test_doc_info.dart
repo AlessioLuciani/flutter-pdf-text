@@ -1,11 +1,11 @@
 import 'package:pdf_text/pdf_text.dart';
 
 class TestDocInfo {
-  final String title;
-  final String author;
-  final String creator;
-  final String subject;
-  final String keywords;
+  final String? title;
+  final String? author;
+  final String? creator;
+  final String? subject;
+  final String? keywords;
 
   /// On the limitations and "features " of the pdf library used for creating
   /// test documents -> (https://github.com/DavBfr/dart_pdf)
@@ -29,7 +29,7 @@ class TestDocInfo {
         this.author = pdfDocInfo.author,
         this.creator = pdfDocInfo.creator,
         this.subject = pdfDocInfo.subject,
-        this.keywords = pdfDocInfo.keywords.join(",");
+        this.keywords = pdfDocInfo.keywords!.join(",");
 
   @override
   bool operator ==(Object other) =>

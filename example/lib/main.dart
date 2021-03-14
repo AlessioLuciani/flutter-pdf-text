@@ -1,6 +1,4 @@
-import 'dart:io';
 import 'dart:math';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -15,8 +13,8 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  PDFDoc _pdfDoc;
-  String _text = "";
+  PDFDoc? _pdfDoc;
+  String? _text = "";
 
   bool _buttonsEnabled = true;
 
@@ -68,7 +66,7 @@ class _MyAppState extends State<MyApp> {
                   child: Text(
                     _pdfDoc == null
                         ? "Pick a new PDF document and wait for it to load..."
-                        : "PDF document loaded, ${_pdfDoc.length} pages\n",
+                        : "PDF document loaded, ${_pdfDoc!.length} pages\n",
                     style: TextStyle(fontSize: 18),
                     textAlign: TextAlign.center,
                   ),
@@ -82,7 +80,7 @@ class _MyAppState extends State<MyApp> {
                   ),
                   padding: EdgeInsets.all(15),
                 ),
-                Text(_text),
+                Text(_text!),
               ],
             ),
           )),
@@ -91,9 +89,11 @@ class _MyAppState extends State<MyApp> {
 
   /// Picks a new PDF document from the device
   Future _pickPDFText() async {
-    File file = await FilePicker.getFile();
-    _pdfDoc = await PDFDoc.fromFile(file);
-    setState(() {});
+    var filePickerResult = await FilePicker.platform.pickFiles();
+    if (filePickerResult != null) {
+      _pdfDoc = await PDFDoc.fromPath(filePickerResult.files.single.path!);
+      setState(() {});
+    }
   }
 
   /// Reads a random page of the document
@@ -105,8 +105,8 @@ class _MyAppState extends State<MyApp> {
       _buttonsEnabled = false;
     });
 
-    String text =
-        await _pdfDoc.pageAt(Random().nextInt(_pdfDoc.length) + 1).text;
+    String? text =
+        await _pdfDoc!.pageAt(Random().nextInt(_pdfDoc!.length) + 1).text;
 
     setState(() {
       _text = text;
@@ -123,7 +123,7 @@ class _MyAppState extends State<MyApp> {
       _buttonsEnabled = false;
     });
 
-    String text = await _pdfDoc.text;
+    String text = await _pdfDoc!.text;
 
     setState(() {
       _text = text;

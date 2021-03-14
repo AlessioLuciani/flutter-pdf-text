@@ -4,7 +4,7 @@ publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.3.0 <3.0.0"
+  sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -14,15 +14,15 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
 
-  file_picker: ^1.5.0+2
+  file_picker: ^3.0.0
 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  pdf: ^1.12.0
-  uuid: ^2.2.2
-  optional: ^5.0.0+1
+  pdf: ^3.0.1
+  uuid: ^3.0.1
+  optional: ^6.0.0-nullsafety.0
 
   pdf_text:
     path: ../

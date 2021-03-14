@@ -4,7 +4,7 @@ version: 0.4.0
 homepage: https://github.com/AlessioLuciani/flutter-pdf-text/tree/master
 
 environment:
-  sdk: ">=2.3.0 <3.0.0"
+  sdk: ">=2.12.0 <3.0.0"
   flutter: ">=1.12.0"
 
 dependencies:
