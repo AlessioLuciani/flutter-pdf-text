@@ -1,6 +1,4 @@
-import 'dart:io';
 import 'dart:math';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -15,7 +13,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  PDFDoc _pdfDoc;
+  PDFDoc? _pdfDoc;
   String _text = "";
 
   bool _buttonsEnabled = true;
@@ -37,38 +35,41 @@ class _MyAppState extends State<MyApp> {
             padding: EdgeInsets.all(10),
             child: ListView(
               children: <Widget>[
-                FlatButton(
+                TextButton(
                   child: Text(
                     "Pick PDF document",
                     style: TextStyle(color: Colors.white),
                   ),
-                  color: Colors.blueAccent,
+                  style: TextButton.styleFrom(
+                      padding: EdgeInsets.all(5),
+                      backgroundColor: Colors.blueAccent),
                   onPressed: _pickPDFText,
-                  padding: EdgeInsets.all(5),
                 ),
-                FlatButton(
+                TextButton(
                   child: Text(
                     "Read random page",
                     style: TextStyle(color: Colors.white),
                   ),
-                  color: Colors.blueAccent,
+                  style: TextButton.styleFrom(
+                      padding: EdgeInsets.all(5),
+                      backgroundColor: Colors.blueAccent),
                   onPressed: _buttonsEnabled ? _readRandomPage : () {},
-                  padding: EdgeInsets.all(5),
                 ),
-                FlatButton(
+                TextButton(
                   child: Text(
                     "Read whole document",
                     style: TextStyle(color: Colors.white),
                   ),
-                  color: Colors.blueAccent,
+                  style: TextButton.styleFrom(
+                      padding: EdgeInsets.all(5),
+                      backgroundColor: Colors.blueAccent),
                   onPressed: _buttonsEnabled ? _readWholeDoc : () {},
-                  padding: EdgeInsets.all(5),
                 ),
                 Padding(
                   child: Text(
                     _pdfDoc == null
                         ? "Pick a new PDF document and wait for it to load..."
-                        : "PDF document loaded, ${_pdfDoc.length} pages\n",
+                        : "PDF document loaded, ${_pdfDoc!.length} pages\n",
                     style: TextStyle(fontSize: 18),
                     textAlign: TextAlign.center,
                   ),
@@ -91,9 +92,11 @@ class _MyAppState extends State<MyApp> {
 
   /// Picks a new PDF document from the device
   Future _pickPDFText() async {
-    File file = await FilePicker.getFile();
-    _pdfDoc = await PDFDoc.fromFile(file);
-    setState(() {});
+    var filePickerResult = await FilePicker.platform.pickFiles();
+    if (filePickerResult != null) {
+      _pdfDoc = await PDFDoc.fromPath(filePickerResult.files.single.path!);
+      setState(() {});
+    }
   }
 
   /// Reads a random page of the document
@@ -106,7 +109,7 @@ class _MyAppState extends State<MyApp> {
     });
 
     String text =
-        await _pdfDoc.pageAt(Random().nextInt(_pdfDoc.length) + 1).text;
+        await _pdfDoc!.pageAt(Random().nextInt(_pdfDoc!.length) + 1).text;
 
     setState(() {
       _text = text;
@@ -123,7 +126,7 @@ class _MyAppState extends State<MyApp> {
       _buttonsEnabled = false;
     });
 
-    String text = await _pdfDoc.text;
+    String text = await _pdfDoc!.text;
 
     setState(() {
       _text = text;
