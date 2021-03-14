@@ -1,3 +1,7 @@
+## 0.5.0
+
+* Dart's sound null safety is now supported.
+
 ## 0.4.0
 
 * The PDFBoxResourceLoader is now used on Android to load PDF documents much faster than before. The fast initialization (i.e. *fastInit*) option has therefore been removed.
