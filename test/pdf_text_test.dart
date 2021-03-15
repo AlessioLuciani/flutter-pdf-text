@@ -1,6 +1,5 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pdf_text/pdf_text.dart';
 
 void main() {
   const MethodChannel channel = MethodChannel('pdf_text');

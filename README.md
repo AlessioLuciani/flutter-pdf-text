@@ -18,7 +18,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  pdf_text: ^0.4.0
+  pdf_text: ^0.5.0
 ```
 
 ## Usage
@@ -125,6 +125,7 @@ allows you not to waste time loading text that you will probably not use. When y
 class PDFDoc {
   int length; // Number of pages of the document
   List<PDFPage> pages; // Pages of the document
+  PDFDocInfo info; // Info of the document
   Future<String> text; // Text of the document
 }
 

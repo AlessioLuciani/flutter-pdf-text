@@ -1,5 +1,5 @@
 @Skip(
-    'To run these tests, make sure an emulator or a real device is connected, then \'cd example\' and : \'flutter run test/pfd_text_test.dart\'')
+    'To run these tests, make sure an emulator or a real device is connected, then \'cd example\' and : \'flutter run test/pdf_text_test.dart\'')
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -72,7 +72,7 @@ void main() async {
       PDFDoc fromUrl =
           await PDFDoc.fromURL("http://localhost/${basename(pdf.path)}");
 
-      await forEach([fromFile, fromPath, fromUrl], (doc) async {
+      await forEach([fromFile, fromPath, fromUrl], (dynamic doc) async {
         expect(await doc.text, textMatches(page));
         expect(doc.pages.length, 1);
         expect(await doc.pages.first.text, textMatches(page));
@@ -111,7 +111,7 @@ void main() async {
       PDFDoc fromUrl =
           await PDFDoc.fromURL("http://localhost/${basename(pdf.path)}");
 
-      await forEach([fromFile, fromPath, fromUrl], (doc) async {
+      await forEach([fromFile, fromPath, fromUrl], (dynamic doc) async {
         expect(doc.pages.length, 2);
         expect(await doc.pageAt(1).text, textMatches(page1));
         expect(await doc.pageAt(2).text, textMatches(page2));
@@ -136,7 +136,7 @@ void main() async {
 
       final expectedContent = "Hello World! (from an encrypted pdf document)";
 
-      await forEach([fromFile, fromPath, fromUrl], (doc) async {
+      await forEach([fromFile, fromPath, fromUrl], (dynamic doc) async {
         expect(await doc.pageAt(1).text, textMatches([expectedContent]));
         expect(await doc.text, textMatches([expectedContent]));
       });
@@ -155,7 +155,7 @@ void main() async {
           "http://localhost/${basename(encryptedPdf.path)}",
           password: "invalid-password");
 
-      await forEach([fromFile, fromPath, fromURL], (foo) async {
+      await forEach([fromFile, fromPath, fromURL], (dynamic foo) async {
         try {
           await foo();
         } on PlatformException catch (e) {
