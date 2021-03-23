@@ -1,7 +1,7 @@
 # PDF Text Plugin
 
 [![Pub Version](https://img.shields.io/pub/v/pdf_text)](https://pub.dev/packages/pdf_text)
-![Flutter CI](https://github.com/AlessioLuciani/flutter-pdf-text/workflows/Flutter%20CI/badge.svg?branch=master)
+[![Flutter CI](https://github.com/AlessioLuciani/flutter-pdf-text/workflows/Flutter%20CI/badge.svg?branch=master)](https://github.com/AlessioLuciani/flutter-pdf-text/actions/workflows/flutter.yml)
 [![GitHub forks](https://img.shields.io/github/forks/AlessioLuciani/flutter-pdf-text)](https://github.com/AlessioLuciani/flutter-pdf-text/network)
 [![GitHub stars](https://img.shields.io/github/stars/AlessioLuciani/flutter-pdf-text)](https://github.com/AlessioLuciani/flutter-pdf-text/stargazers)
 [![GitHub license](https://img.shields.io/github/license/AlessioLuciani/flutter-pdf-text)](https://github.com/AlessioLuciani/flutter-pdf-text/blob/master/LICENSE)
