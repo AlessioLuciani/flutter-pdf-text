@@ -1,9 +1,10 @@
 import 'dart:math';
+import 'package:example/key.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
-
-import 'package:pdf_text/pdf_text.dart';
+import 'package:pdf_text/pdf_text.dart ';
+import 'package:google_generative_ai/google_generative_ai.dart';
 
 void main() => runApp(MyApp());
 
@@ -64,6 +65,16 @@ class _MyAppState extends State<MyApp> {
                       padding: EdgeInsets.all(5),
                       backgroundColor: Colors.blueAccent),
                   onPressed: _buttonsEnabled ? _readWholeDoc : () {},
+                ),
+                TextButton(
+                  child: Text(
+                    "convert text into Embedding",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  style: TextButton.styleFrom(
+                      padding: EdgeInsets.all(5),
+                      backgroundColor: Colors.blueAccent),
+                  onPressed: _buttonsEnabled ? Generate_promtEmbedded : () {},
                 ),
                 Padding(
                   child: Text(
@@ -130,6 +141,22 @@ class _MyAppState extends State<MyApp> {
 
     setState(() {
       _text = text;
+      _buttonsEnabled = true;
+    });
+  }
+
+  // ignore: non_constant_identifier_names
+  Generate_promtEmbedded() async {
+    String text =
+        await _pdfDoc!.pageAt(Random().nextInt(_pdfDoc!.length) + 1).text;
+    final model =
+        GenerativeModel(model: 'text-embedding-004', apiKey: GEMINI_API_key);
+    final content = Content.text(text);
+    final result = await model.embedContent(content);
+    print(result.embedding.values);
+    String texts =result.embedding.values.map((number) => number.toString()).join(',');
+    setState(() {
+      _text = texts;
       _buttonsEnabled = true;
     });
   }
