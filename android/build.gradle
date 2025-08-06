@@ -26,7 +26,7 @@ apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 28
-
+    namespace 'dev.aluc.pdf_text'
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
