@@ -25,7 +25,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
-    namespace "africa.qnox.pdf_text"
+    namespace "dev.aluc.pdf_text"
     compileSdkVersion 34
 
     sourceSets {
